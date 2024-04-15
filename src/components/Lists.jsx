@@ -64,7 +64,7 @@ function Nowplaying() {
         <Swiper
             className='container1'
             modules={[Navigation, Pagination, Scrollbar, A11y]}
-            spaceBetween={10}
+            spaceBetween={4}
             slidesPerView={5}
             loop={true}
             navigation

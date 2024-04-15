@@ -6,9 +6,15 @@
     
 }
 
+.header-font{
+    font-family: "Platypi", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
 .texts{
-    font-family: "Kalam", cursive;
-    font-weight: 700;
+    font-family: "Platypi", serif;
+    font-weight: 200;
     font-style: normal;
 }
 

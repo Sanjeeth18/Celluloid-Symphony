@@ -38,7 +38,7 @@ function Lists_1() {
       <Swiper
         className='container1'
         modules={[Navigation, Pagination, Scrollbar, A11y]}
-        spaceBetween={10}
+        spaceBetween={4}
         slidesPerView={5}
         loop={true}
         navigation
@@ -66,7 +66,7 @@ function Lists_1() {
       <Swiper
         className='container1'
         modules={[Navigation, Pagination, Scrollbar, A11y]}
-        spaceBetween={10}
+        spaceBetween={4}
         slidesPerView={5}
         loop={true}
         navigation

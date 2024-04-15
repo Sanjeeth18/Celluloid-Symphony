@@ -13,8 +13,6 @@ function Footer() {
         <div className='container'>
             <div className='icons'>
                 <a href="https://www.instagram.com/_.sanjeeth._7255/"><i className='fa-brands fa-instagram'></i></a>
-                <a href='https://www.instagram.com/prem_dharshan_/'><i className='fa-brands fa-instagram'></i></a>
-                <a href='https://github.com/Prem-Dharshan/'><i className='fa-brands fa-github'></i></a>
                 <a href='https://github.com/Sanjeeth18'><i className='fa-brands fa-github'></i></a>
             </div>
             <div className="nav">
@@ -25,12 +23,7 @@ function Footer() {
                     <li>
                         <a onClick={()=>navigate('/about')}>About</a>
                     </li>
-                    <li>
-                        <a onClick={()=>navigate('/about')}>Contact Us</a>
-                    </li>
-                    <li>
-                        <a onClick={()=>navigate('/team')}>Our Team</a>
-                    </li>
+
                 </ul>
             </div>
             <div className="bottom">
