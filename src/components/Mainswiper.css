@@ -1,0 +1,11 @@
+.images1{
+    position: relative;
+    width: 100%;
+    height:100%;
+    object-fit:fill;
+    object-position: center;
+}
+
+.containerms{
+    height: 100vh;
+}

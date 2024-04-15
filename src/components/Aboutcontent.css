@@ -1,0 +1,17 @@
+.container-texts{
+
+    color:#fff;
+    font-size: 25px;
+    padding-left: 5%;
+    
+}
+
+.texts{
+    font-family: "Kalam", cursive;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.texts h2{
+    text-align: center;
+}

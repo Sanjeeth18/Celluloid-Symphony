@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Racing+Sans+One&family=Rubik+Scribble&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Lobster&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Style+Script&display=swap');
+*{
+  margin:0;
+  padding:0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+:root{
+  --primary : #ff3700;
+}
+
+body{
+  background: #000;
+  font-family: 'Roboto',sans-serif;
+}
