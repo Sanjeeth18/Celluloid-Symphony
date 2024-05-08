@@ -37,6 +37,7 @@
     overflow-x:scroll;
     scroll-behavior: smooth;
     padding-right: 10%;
+    margin-left: 1%;
 }
 
 .containercards::-webkit-scrollbar {
