@@ -19,10 +19,10 @@ function Aboutcontent() {
   return (
     <div className='container-texts'>
         <h2 className='header-font'>Project Overview</h2>
-      <pre className='texts'>{overview}</pre>
+      <pre className='texts'>{content}</pre>
       <div className='texts'>
            <h2 className='header-font'>Overview for Frontend</h2> 
-           <pre className='texts'>{content}</pre>
+           <pre className='texts'>{overview}</pre>
       </div>
     </div>
   );
