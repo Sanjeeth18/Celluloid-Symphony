@@ -1,90 +1,129 @@
-import React from 'react'
-import { useState } from 'react';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
-import SeriesList from '../data/seriesdata';
-import Popular from '../data/Popular';
-import './Lists.css'
-import MovieDetails from './MovieDetails';
-import { Container,Row,Col } from 'react-bootstrap';
-
+import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, FreeMode ,Navigation} from "swiper/modules";
+import { useNavigate } from "react-router-dom";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/free-mode";
+import SeriesList from "../data/seriesdata";
+import Popular from "../data/Popular";
 
 function Nowplaying() {
-  const serieslist=SeriesList();
-  const popmovie=Popular();
-  const [selectedMovie1, setSelectedMovie1] = useState(null);
-  const [selectedMovie2, setSelectedMovie2] = useState(null);
+  const navigate = useNavigate();
+  const serieslist = SeriesList();
+  const popmovie = Popular();
 
-  const clicked1 = (movie) => {
-    setSelectedMovie1(prevSelectedMovie1 => prevSelectedMovie1 === movie ? null : movie);
+  const clicked = (movie) => {
+    console.log(movie);
+    navigate("/details", { state: { movie } });
   };
 
-  const clicked2 = (movie) => {
-    setSelectedMovie2(prevSelectedMovie2 => prevSelectedMovie2 === movie ? null : movie);
-  };
-    return (
+  const baseUrl = "https://image.tmdb.org/t/p/original";
+
+  return (
     <>
-        <Container>
-            <Row>
-                <Col>
-                    <h1>Popular Movies</h1>
-                </Col>
-            </Row>
-        </Container>
-        <Swiper
-            className='container1'
-            modules={[Navigation, Pagination, Scrollbar, A11y]}
-            spaceBetween={4}
-            slidesPerView={5}
-            loop={true}
-            navigation
-        >
+      <section className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-2xl p-4 mb-3 shadow-lg transform ">
+        <div className="flex flex-col items-center py-8">
+          <h2 className="text-4xl lg:text-7xl font-serif text-white py-5">Movies</h2>
+          <Swiper
+          navigation={true}
+            breakpoints={{
+              340: {
+                slidesPerView: 1.5,
+                spaceBetween: 10,
+              },
+              700: {
+                slidesPerView: 2.5,
+                spaceBetween: 20,
+              },
+              1024: {
+                slidesPerView: 3.5,
+                spaceBetween: 30,
+              },
+            }}
+            freeMode={true}
+            pagination={{
+              clickable: true,
+            }}
+            modules={[FreeMode, Pagination,Navigation]}
+            className="max-w-[90%] lg:max-w-[80%] "
+          >
             {popmovie.map((movie, index) => (
-                <SwiperSlide key={index}>
-                <img onClick={() => clicked1(movie)}
-                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              <SwiperSlide key={index}>
+                <div className="group relative shadow-xl rounded-xl overflow-hidden">
+                  {/* Movie Poster */}
+                  <img
+                    onClick={() => clicked(movie)}
+                    src={`${baseUrl}${movie.poster_path}`}
                     alt={`Movie Poster ${index}`}
-                    className='imageslist'
-                />
-                </SwiperSlide>
+                    className="w-full h-[250px] lg:h-[450px] object-cover transform transition-transform duration-300 group-hover:scale-110"
+                  />
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  {/* Movie Info */}
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="text-lg font-bold">{movie.title}</h3>
+                    <p className="text-sm mt-1">⭐ {movie.vote_average}</p>
+                    <p className="text-sm font-semibold mt-2">{movie.release_date}</p>
+                  </div>
+                </div>
+              </SwiperSlide>
             ))}
-        </Swiper>
-        {selectedMovie1 && <MovieDetails movie={selectedMovie1} />}
-        <Container>
-            <Row>
-                <Col>
-                    <h1>TV Series</h1>
-                </Col>
-            </Row>
-        </Container>
-        <Swiper
-            className='container1'
-            modules={[Navigation, Pagination, Scrollbar, A11y]}
-            spaceBetween={4}
-            slidesPerView={5}
-            loop={true}
-            navigation
-            scrollbar={{draggable:true}}
-
-        >
+          </Swiper>
+        </div>
+      </section>
+      <section className="bg-gradient-to-r from-teal-500 via-blue-500 to-purple-600 rounded-2xl p-4 mb-3 shadow-lg transform ">
+        <div className="flex flex-col items-center py-8">
+          <h2 className="text-4xl lg:text-7xl font-serif text-white py-5">Series</h2>
+          <Swiper
+            breakpoints={{
+              340: {
+                slidesPerView: 1.5,
+                spaceBetween: 10,
+              },
+              700: {
+                slidesPerView: 2.5,
+                spaceBetween: 20,
+              },
+              1024: {
+                slidesPerView: 3.5,
+                spaceBetween: 30,
+              },
+            }}
+            freeMode={true}
+            pagination={{
+              clickable: true,
+            }}
+            navigation={true}
+            modules={[FreeMode, Pagination,Navigation]}
+            className="max-w-[90%] lg:max-w-[80%]"
+          >
             {serieslist.map((movie, index) => (
-                <SwiperSlide key={index}>
-                <img onClick={() => clicked2(movie)}
-                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              <SwiperSlide key={index}>
+                <div className="group relative shadow-xl rounded-xl overflow-hidden">
+                  {/* Series Poster */}
+                  <img
+                    onClick={() => clicked(movie)}
+                    src={`${baseUrl}${movie.poster_path}`}
                     alt={`Movie Poster ${index}`}
-                    className='imageslist'
-                />
-                </SwiperSlide>
+                    className="w-full h-[250px] lg:h-[450px] object-cover transform transition-transform duration-300 group-hover:scale-110"
+                  />
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  {/* Movie Info */}
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="text-lg font-bold">{movie.name}</h3>
+                    <p className="text-sm mt-1">⭐ {movie.vote_average}</p>
+                    <p className="text-sm font-semibold mt-2">{movie.first_air_date}</p>
+                  </div>
+                </div>
+              </SwiperSlide>
             ))}
-        </Swiper>
-        {selectedMovie2 && <MovieDetails movie={selectedMovie2} />}
+          </Swiper>
+        </div>
+      </section>
     </>
-    )
-
+  );
 }
 
-export default Nowplaying
+export default Nowplaying;

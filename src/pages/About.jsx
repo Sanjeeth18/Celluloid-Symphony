@@ -5,11 +5,11 @@ import Aboutcontent from '../components/Aboutcontent'
 
 function About() {
   return (
-    <>
-        <Header/>
+    <div className='m-3'>
+        <Header value={true}/>
         <Aboutcontent/>
         <Footer/>
-    </>
+    </div>
   )
 }
 

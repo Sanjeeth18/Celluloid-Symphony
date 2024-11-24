@@ -1,30 +1,28 @@
-import React from 'react';
-import './Aboutcontent.css';
+import React from "react";
 
 function Aboutcontent() {
-  const content = `
-# CELLULOID SYMPHONY
-
-            _Celluloid Symphony is a web application that delivers a comprehensive 
-      movie information experience,enriched by the insightful reviews of two passionate 
-      cinephiles – the creators themselves`
-    const overview=`
-    In this Project , for Frontend reactjs language is used.
-        - For sliders Swipers were used.
-        - Cards were used for display the searched movies.
-        - Icons were imported from the Font Awesome cdn libraries.
-        - Fonts were imported from Google fonts.
-    `
-
   return (
-    <div className='container-texts'>
-        <h2 className='header-font'>Project Overview</h2>
-      <pre className='texts'>{content}</pre>
-      <div className='texts'>
-           <h2 className='header-font'>Overview for Frontend</h2> 
-           <pre className='texts'>{overview}</pre>
-      </div>
-    </div>
+    <section className="rounded-2xl py-20 px-4 mb-3 bg-gradient-to-tr from-purple-600 via-pink-500 to-indigo-700">
+      <h2 className="text-5xl text-orange-400 text-center">About</h2>
+      <p className="text-3xl text-center px-16 py-4 text-gray-300">
+        Celluloid Symphony is a highly responsive web application styled with
+        TailwindCSS, offering a visually appealing and seamless user experience.
+        The application integrates API calls to dynamically fetch and display
+        data, ensuring real-time content updates. It incorporates modern React
+        features, including hooks like useState, useEffect, useLocation, and
+        useNavigate to manage state, lifecycle events, and navigation
+        efficiently. React Router is employed for smooth and dynamic page
+        routing, enhancing usability. Interactive Swipers are utilized for
+        showcasing content in a sleek and engaging manner. The app is designed
+        to handle both desktop and mobile views gracefully, prioritizing user
+        responsiveness. Modular and reusable components improve maintainability
+        and scalability. API integration allows fetching movie or
+        multimedia-related data for a rich and interactive user experience. The
+        use of TailwindCSS ensures rapid styling with minimal code. This modern
+        approach creates a powerful, user-friendly, and visually stunning
+        platform.
+      </p>
+    </section>
   );
 }
 
