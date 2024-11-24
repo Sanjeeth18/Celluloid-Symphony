@@ -6,8 +6,13 @@ import About from "../src/pages/About";
 import MovieDetails from "./pages/MovieDetails";
 import Contact from "./pages/Contact";
 import Search from "./pages/Search";
+import { useEffect } from "react";
 
 function App() {
+
+  useEffect(() => {
+    document.title = "Celluloid Symphony - Explore Movies"; 
+  }, []); 
   return (
     <>
       <Router>
