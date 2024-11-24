@@ -4,7 +4,7 @@ function Aboutcontent() {
   return (
     <section className="rounded-2xl py-20 px-4 mb-3 bg-gradient-to-tr from-purple-600 via-pink-500 to-indigo-700">
       <h2 className="text-5xl text-orange-400 text-center">About</h2>
-      <p className="text-3xl text-center px-16 py-4 text-gray-300">
+      <p className="text-xl lg:text-3xl text-center px-2 md:px-16 py-4 text-gray-300">
         Celluloid Symphony is a dynamic and responsive web application built
         with modern React features and styled using TailwindCSS. It offers a
         seamless user experience across devices by integrating useMediaQuery to

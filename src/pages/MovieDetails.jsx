@@ -9,7 +9,7 @@ function MovieDetails() {
   const movie = location.state;
   return (
     <div className="m-3">
-      <Header value={true} />
+      <Header value={false} />
       <Details detail={movie} />
       <Footer />
     </div>

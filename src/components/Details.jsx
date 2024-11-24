@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import logo from '../assets/No_Image_Available.jpg'
+import Mainswiper from "./Mainswiper";
 
 function Details(props) {
   const detail = props.detail.movie;
@@ -80,6 +81,9 @@ function Details(props) {
               </p>
             </div>
           </div>
+        </div>
+        <div className="mt-2">
+        <Mainswiper/>
         </div>
       </section>
     </>
