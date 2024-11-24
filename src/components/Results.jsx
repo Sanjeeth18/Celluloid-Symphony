@@ -18,7 +18,7 @@ function Results({ query = {} }) {
 
   return (
     <section className="rounded-2xl py-20 px-4 mb-3 bg-gradient-to-br from-purple-600 via-pink-400 to-indigo-800">
-      <h2 className="text-3xl md:text-5xl text-orange-400 mb-8 text-center">Results</h2>
+      <h2 className="text-5xl md:text-7xl text-orange-400 mb-8 text-center">Results</h2>
       <div className="container mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5">
           {Array.isArray(results) && results.length > 0 ? (
@@ -56,7 +56,9 @@ function Results({ query = {} }) {
                 </div>
               ))
           ) : (
-            <p className="text-white">No results to display</p>
+            <div className="col-span-full flex items-center justify-center">
+              <p className="text-white text-2xl lg:text-5xl">No results to display</p>
+            </div>
           )}
         </div>
       </div>

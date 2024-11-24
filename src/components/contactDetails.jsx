@@ -6,7 +6,10 @@ function ContactDetails() {
     <>
       <section className="rounded-2xl p-4 mb-3 bg-gradient-to-tr from-purple-500 to-indigo-600 text-orange-400">
         <div className="container  p-4">
+        <h2 className="text-center py-4 text-5xl lg:text-7xl">Contact Details</h2>
+
           <div className="flex flex-col md:flex-row">
+            
             <div className="w-full sm:my-auto md:w-1/3 ">
               <img
                 src={logo}
