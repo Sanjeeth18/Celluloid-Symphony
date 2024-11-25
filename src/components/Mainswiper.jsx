@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import MovieList from "../data/moviedata";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
@@ -7,7 +7,7 @@ import {
   Navigation,
   Autoplay,
 } from "swiper/modules";
-
+import logo from '../assets/No_Image_Available.jpg'
 import { useMediaQuery } from "react-responsive";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -20,33 +20,12 @@ export default () => {
   const navigate = useNavigate();
   const movieList = MovieList();
   const baseUrl = "https://image.tmdb.org/t/p/original";
-  const [query, setQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const clicked = (movie) => {
     console.log(movie);
     navigate("/details", { state: { movie } });
   };
 
-  const handleSearchChange = (event) => {
-    setQuery(event.target.value);
-  };
-
-  const handleSearchSubmit = async (event) => {
-    event.preventDefault();
-    setIsLoading(true);
-    try {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/search/multi?api_key=44138842cb5326f8d36361f3de1243ad&query=${query}`
-      );
-      const data = await response.json();
-      setIsLoading(false);
-      navigate("/search", { state: { searchResults: data.results } });
-    } catch (error) {
-      console.error("Error fetching search results:", error);
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="flex flex-col items-center py-8">
