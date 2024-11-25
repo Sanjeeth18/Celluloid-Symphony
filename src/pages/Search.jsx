@@ -10,13 +10,12 @@ function Search() {
   const datas=location.state;
 
   useEffect(()=>{
-    console.log(datas)
+    console.log("Search : ",datas)
   },[])
 
   return (
     <div className='bg-white m-3'>
-        <Header value={false}/>
-        <Results query={datas}/>
+        <Header search={true} datas={datas}/>
         <Footer/>
     </div>
   )

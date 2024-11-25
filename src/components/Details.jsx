@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import logo from '../assets/No_Image_Available.jpg'
+import logo from "../assets/No_Image_Available.jpg";
 import Mainswiper from "./Mainswiper";
 
 function Details(props) {
@@ -16,8 +16,9 @@ function Details(props) {
 
   return (
     <>
-      <section className="rounded-2xl p-4 mb-3 bg-gradient-to-tr from-purple-500 to-indigo-600 text-orange-400">
-        <div className="container  p-4">
+      <div className="p-4  mb-3">
+        {" "}
+        <div className="container md:ml-20 p-4">
           <div className="flex flex-col md:flex-row">
             {/* Detail Poster */}
             <div className="w-full sm:my-auto md:w-1/3 ">
@@ -41,51 +42,51 @@ function Details(props) {
                 {detail.title || detail.original_name}
               </h2>
               <p className="text-lg ">
-                <strong className="text-purple-300 text-xl">
+                <strong className="text-purple-500 text-xl">
                   Release Date:
                 </strong>{" "}
-                <span className="text-white">
+                <span className="text-black">
                   {" "}
                   {detail.release_date || detail.first_air_date}
                 </span>
               </p>
-              <p className="text-lg text-white">
-                <strong className="text-purple-300 text-xl">Rating:</strong> ⭐{" "}
+              <p className="text-lg text-black">
+                <strong className="text-purple-500 text-xl">Rating:</strong> ⭐{" "}
                 {detail.vote_average || "N/A"}
               </p>
-              <p className="text-lg text-white">
-                <strong className="text-purple-300 text-xl">
+              <p className="text-lg text-black">
+                <strong className="text-purple-500 text-xl">
                   Vote Count :{" "}
                 </strong>{" "}
                 ⭐ {detail.vote_count || "N/A"}
               </p>
-              <p className="text-lg text-white">
-                <strong className="text-purple-300 text-xl">Adult : </strong>{" "}
+              <p className="text-lg text-black">
+                <strong className="text-purple-500 text-xl">Adult : </strong>{" "}
                 {detail.adult ? "Yes" : "No"}
               </p>
 
-              <p className="text-lg text-white">
-                <strong className="text-purple-300 text-xl">Language : </strong>{" "}
+              <p className="text-lg text-black">
+                <strong className="text-purple-500 text-xl">Language : </strong>{" "}
                 {detail.original_language || "N/A"}
               </p>
-              <p className="text-lg text-white">
-                <strong className="text-purple-300 text-xl">
+              <p className="text-lg text-black">
+                <strong className="text-purple-500 text-xl">
                   Popularity :{" "}
                 </strong>{" "}
                 {detail.popularity || "N/A"}
               </p>
 
-              <p className="text-lg w-full lg:w-1/2 text-white mt-4">
-                <strong className="text-purple-300 text-xl">Overview : </strong>{" "}
+              <p className="text-lg w-full lg:w-1/2 text-black mt-4">
+                <strong className="text-purple-500 text-xl">Overview : </strong>{" "}
                 <span>{detail.overview || "No overview available."}</span>
               </p>
             </div>
           </div>
         </div>
         <div className="mt-2">
-        <Mainswiper/>
+          <Mainswiper />
         </div>
-      </section>
+      </div>
     </>
   );
 }

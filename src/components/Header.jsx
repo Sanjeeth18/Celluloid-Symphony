@@ -1,12 +1,27 @@
 import React, { useState } from "react";
 import Mainswiper from "./Mainswiper";
 import { useNavigate } from "react-router-dom";
+import Aboutcontent from "./Aboutcontent";
+import ContactDetails from "./contactDetails";
+import Details from "./Details";
+import Results from "./Results";
+import Nowplaying from "./Lists";
+import Lists_1 from "./Lists_1";
 
-function Header({ value }) {
+function Header({
+  nowplaying = false,
+  lists = false,
+  swiper = false,
+  about = false,
+  contact = false,
+  moviesDetails = false,
+  search = false,
+  datas = [],
+}) {
   const [searchResults, setSearchResults] = useState([]);
   const [query, setQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(false);  
-  const [isMenuOpen, setIsMenuOpen] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -16,28 +31,28 @@ function Header({ value }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setIsLoading(true); 
+    setIsLoading(true);
     try {
       const response = await fetch(
         `https://api.themoviedb.org/3/search/multi?api_key=44138842cb5326f8d36361f3de1243ad&query=${query}`
       );
       const data = await response.json();
       setSearchResults(data.results);
-      setIsLoading(false); 
+      setIsLoading(false);
       navigate("/search", { state: { searchResults: data.results } });
     } catch (error) {
       console.error("Error fetching search results:", error);
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
   return (
-    <section className="bg-gradient-to-b from-purple-600 via-pink-500 to-red-400 text-white rounded-2xl p-4 mb-3 shadow-lg">
+    <section className="bg-gradient-to-b from-indigo-200 via-lime-200 to-sky-200 text-gray-800 rounded-2xl p-4 mb-3 shadow-sm">
       <div className="container mx-auto py-10">
         <div className="flex px-4 items-center">
           {/* Menu Icon */}
           <button
-            className="mr-5 lg:hidden border border-white rounded-lg p-2 sm:block"
+            className="mr-5 lg:hidden border border-gray-400 rounded-lg p-2 sm:block"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <svg
@@ -45,7 +60,7 @@ function Header({ value }) {
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth="2"
-              stroke="white"
+              stroke="gray"
               className="w-6 h-6"
             >
               <path
@@ -59,7 +74,7 @@ function Header({ value }) {
           {/* Title */}
           <a
             href=""
-            className="text-3xl lg:text-6xl font-extrabold my-auto pr-5 md:border-r border-white"
+            className="text-3xl lg:text-6xl font-extrabold my-auto pr-5 md:border-r border-gray-400"
           >
             Celluloid Symphony
           </a>
@@ -67,17 +82,17 @@ function Header({ value }) {
           {/* Menu for larger screens */}
           <div className="hidden md:flex my-auto text-xl pl-5">
             <ul className="flex">
-              <li className="px-4 py-2 mx-2 bg-gradient-to-r from-purple-500 via-pink-400 to-red-300 hover:from-red-300 hover:to-purple-500 rounded-lg shadow-md hover:shadow-lg transition">
+              <li className="px-4 py-2 mx-2 bg-gradient-to-r from-indigo-300 via-lime-300 to-sky-300 hover:from-sky-300 hover:to-indigo-300 rounded-lg shadow-md hover:shadow-lg transition">
                 <a href="/" className="px-3">
                   Home
                 </a>
               </li>
-              <li className="px-4 py-2 mx-2 bg-gradient-to-r from-purple-500 via-pink-400 to-red-300 hover:from-red-300 hover:to-purple-500 rounded-lg shadow-md hover:shadow-lg transition">
+              <li className="px-4 py-2 mx-2 bg-gradient-to-r from-indigo-300 via-lime-300 to-sky-300 hover:from-sky-300 hover:to-indigo-300 rounded-lg shadow-md hover:shadow-lg transition">
                 <a href="/about" className="px-3">
                   About
                 </a>
               </li>
-              <li className="px-4 py-2 mx-2 bg-gradient-to-r from-purple-500 via-pink-400 to-red-300 hover:from-red-300 hover:to-purple-500 rounded-lg shadow-md hover:shadow-lg transition">
+              <li className="px-4 py-2 mx-2 bg-gradient-to-r from-indigo-300 via-lime-300 to-sky-300 hover:from-sky-300 hover:to-indigo-300 rounded-lg shadow-md hover:shadow-lg transition">
                 <a href="/contact" className="px-3">
                   Contact
                 </a>
@@ -89,12 +104,12 @@ function Header({ value }) {
           <div className="hidden lg:flex ml-auto">
             <form onSubmit={handleSubmit} className="flex items-center">
               <input
-                className="p-3 w-60 rounded-l-lg outline-none text-black border-none focus:ring-2 focus:ring-pink-400"
+                className="p-3 w-60 rounded-l-lg outline-none text-black border-none focus:ring-2 focus:ring-lime-300"
                 placeholder="Search..."
                 onChange={handleChange}
               ></input>
               <button
-                className="flex py-3 px-5 bg-gradient-to-r from-red-400 to-purple-500 hover:from-purple-500 hover:to-red-400 text-white rounded-r-lg shadow-md hover:shadow-lg transition"
+                className="flex py-3 px-5 bg-gradient-to-r from-indigo-300 to-sky-300 hover:from-sky-300 hover:to-indigo-300 text-gray-800 rounded-r-lg shadow-md hover:shadow-lg transition"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -124,7 +139,7 @@ function Header({ value }) {
                     fill="none"
                     viewBox="0 0 24 24"
                     strokeWidth="2"
-                    stroke="white"
+                    stroke="gray"
                     className="w-5 h-5"
                   >
                     <path
@@ -143,25 +158,28 @@ function Header({ value }) {
         {isMenuOpen && (
           <div className="mt-5 text-center">
             <ul className="block text-lg">
-              <li className="px-3 py-2 mx-auto bg-gradient-to-r from-purple-500 via-pink-400 to-red-300 hover:from-red-300 hover:to-purple-500 rounded-lg shadow-md hover:shadow-lg transition">
+              <li className="px-3 py-2 mx-auto bg-gradient-to-r from-indigo-300 via-lime-300 to-sky-300 hover:from-sky-300 hover:to-indigo-300 rounded-lg shadow-md hover:shadow-lg transition">
                 <a href="/">Home</a>
               </li>
-              <li className="px-3 py-2 mx-auto bg-gradient-to-r from-purple-500 via-pink-400 to-red-300 hover:from-red-300 hover:to-purple-500 rounded-lg shadow-md hover:shadow-lg transition">
+              <li className="px-3 py-2 mx-auto bg-gradient-to-r from-indigo-300 via-lime-300 to-sky-300 hover:from-sky-300 hover:to-indigo-300 rounded-lg shadow-md hover:shadow-lg transition">
                 <a href="/about">About</a>
               </li>
-              <li className="px-3 py-2 mx-auto bg-gradient-to-r from-purple-500 via-pink-400 to-red-300 hover:from-red-300 hover:to-purple-500 rounded-lg shadow-md hover:shadow-lg transition">
+              <li className="px-3 py-2 mx-auto bg-gradient-to-r from-indigo-300 via-lime-300 to-sky-300 hover:from-sky-300 hover:to-indigo-300 rounded-lg shadow-md hover:shadow-lg transition">
                 <a href="/contact">Contact</a>
               </li>
               {/* Search Input for Mobile Menu */}
               <li className="mt-4">
-                <form onSubmit={handleSubmit} className="flex items-center justify-center">
+                <form
+                  onSubmit={handleSubmit}
+                  className="flex items-center justify-center"
+                >
                   <input
-                    className="p-3 w-60 rounded-l-lg text-black outline-none border-none focus:ring-2 focus:ring-pink-400"
+                    className="p-3 w-60 rounded-l-lg text-black outline-none border-none focus:ring-2 focus:ring-lime-300"
                     placeholder="Search..."
                     onChange={handleChange}
                   ></input>
                   <button
-                    className="flex py-3 px-5 bg-gradient-to-r from-red-400 to-purple-500 hover:from-purple-500 hover:to-red-400 text-white rounded-r-lg shadow-md hover:shadow-lg transition"
+                    className="flex py-3 px-5 bg-gradient-to-r from-indigo-300 to-sky-300 hover:from-sky-300 hover:to-indigo-300 text-gray-800 rounded-r-lg shadow-md hover:shadow-lg transition"
                     disabled={isLoading}
                   >
                     {isLoading ? (
@@ -191,7 +209,7 @@ function Header({ value }) {
                         fill="none"
                         viewBox="0 0 24 24"
                         strokeWidth="2"
-                        stroke="white"
+                        stroke="gray"
                         className="w-5 h-5"
                       >
                         <path
@@ -208,7 +226,16 @@ function Header({ value }) {
           </div>
         )}
       </div>
-      {value === true && <Mainswiper />}    </section>
+
+      {/* Dynamic Content */}
+      {swiper && <Mainswiper />}
+      {nowplaying && <Nowplaying />}
+      {lists && <Lists_1 />}
+      {about && <Aboutcontent />}
+      {contact && <ContactDetails />}
+      {moviesDetails && <Details detail={datas} />}
+      {search && <Results query={datas} />}
+    </section>
   );
 }
 

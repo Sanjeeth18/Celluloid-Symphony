@@ -9,8 +9,8 @@ function MovieDetails() {
   const movie = location.state;
   return (
     <div className="m-3">
-      <Header value={false} />
-      <Details detail={movie} />
+      <Header  moviesDetails={true}  datas={movie}/>
+      {/* <Details detail={movie} /> */}
       <Footer />
     </div>
   );

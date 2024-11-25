@@ -17,8 +17,8 @@ function Results({ query = {} }) {
   const results = query.searchResults || []; 
 
   return (
-    <section className="rounded-2xl py-20 px-4 mb-3 bg-gradient-to-br from-purple-600 via-pink-400 to-indigo-800">
-      <h2 className="text-5xl md:text-7xl text-orange-400 mb-8 text-center">Results</h2>
+    <div>
+      <h2 className="text-5xl md:text-7xl text-white mb-8 text-center font-serif">Results</h2>
       <div className="container mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5">
           {Array.isArray(results) && results.length > 0 ? (
@@ -62,7 +62,7 @@ function Results({ query = {} }) {
           )}
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 

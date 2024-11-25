@@ -6,8 +6,7 @@ import Aboutcontent from '../components/Aboutcontent'
 function About() {
   return (
     <div className='m-3'>
-        <Header value={true}/>
-        <Aboutcontent/>
+        <Header swiper={true} about={true} />
         <Footer/>
     </div>
   )

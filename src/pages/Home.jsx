@@ -7,9 +7,9 @@ import Lists_1 from '../components/Lists_1'
 function Home() {
   return (
     <div className='bg-white m-3'>
-        <Header value={true}/>
-        <Nowplaying/>
-        <Lists_1/>
+        <Header swiper={true} nowplaying={true} lists={true}/>
+        {/* <Nowplaying/>
+        <Lists_1/> */}
         <Footer/>
     </div>
   )

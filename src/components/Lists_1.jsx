@@ -19,8 +19,7 @@ function Lists_1() {
   };
 
   return (
-    <>
-      <section className="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 rounded-2xl p-4 mb-3">
+    <div>
         <div className="flex flex-col items-center py-8">
           <h2 className="text-4xl lg:text-7xl font-serif py-5">Upcoming</h2>
           <Swiper
@@ -73,8 +72,7 @@ function Lists_1() {
             ))}
           </Swiper>
         </div>
-      </section>
-    </>
+    </div>
   );
 }
 

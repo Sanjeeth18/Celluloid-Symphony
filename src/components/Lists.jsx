@@ -1,6 +1,6 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, FreeMode ,Navigation} from "swiper/modules";
+import { Pagination, FreeMode, Navigation } from "swiper/modules";
 import { useNavigate } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -21,12 +21,14 @@ function Nowplaying() {
   const baseUrl = "https://image.tmdb.org/t/p/original";
 
   return (
-    <>
-      <section className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-2xl p-4 mb-3 shadow-lg transform ">
+    <div>
+      <div>
         <div className="flex flex-col items-center py-8">
-          <h2 className="text-4xl lg:text-7xl font-serif text-white py-5">Movies</h2>
+          <h2 className="text-4xl lg:text-7xl font-serif text-black py-5">
+            Movies
+          </h2>
           <Swiper
-          navigation={true}
+            navigation={true}
             breakpoints={{
               340: {
                 slidesPerView: 1.5,
@@ -45,7 +47,7 @@ function Nowplaying() {
             pagination={{
               clickable: true,
             }}
-            modules={[FreeMode, Pagination,Navigation]}
+            modules={[FreeMode, Pagination, Navigation]}
             className="max-w-[90%] lg:max-w-[80%] "
           >
             {popmovie.map((movie, index) => (
@@ -64,17 +66,21 @@ function Nowplaying() {
                   <div className="absolute bottom-4 left-4 text-white">
                     <h3 className="text-lg font-bold">{movie.title}</h3>
                     <p className="text-sm mt-1">⭐ {movie.vote_average}</p>
-                    <p className="text-sm font-semibold mt-2">{movie.release_date}</p>
+                    <p className="text-sm font-semibold mt-2">
+                      {movie.release_date}
+                    </p>
                   </div>
                 </div>
               </SwiperSlide>
             ))}
           </Swiper>
         </div>
-      </section>
-      <section className="bg-gradient-to-r from-teal-500 via-blue-500 to-purple-600 rounded-2xl p-4 mb-3 shadow-lg transform ">
+      </div>
+      <div>
         <div className="flex flex-col items-center py-8">
-          <h2 className="text-4xl lg:text-7xl font-serif text-white py-5">Series</h2>
+          <h2 className="text-4xl lg:text-7xl font-serif text-black py-5">
+            Series
+          </h2>
           <Swiper
             breakpoints={{
               340: {
@@ -95,7 +101,7 @@ function Nowplaying() {
               clickable: true,
             }}
             navigation={true}
-            modules={[FreeMode, Pagination,Navigation]}
+            modules={[FreeMode, Pagination, Navigation]}
             className="max-w-[90%] lg:max-w-[80%]"
           >
             {serieslist.map((movie, index) => (
@@ -114,15 +120,17 @@ function Nowplaying() {
                   <div className="absolute bottom-4 left-4 text-white">
                     <h3 className="text-lg font-bold">{movie.name}</h3>
                     <p className="text-sm mt-1">⭐ {movie.vote_average}</p>
-                    <p className="text-sm font-semibold mt-2">{movie.first_air_date}</p>
+                    <p className="text-sm font-semibold mt-2">
+                      {movie.first_air_date}
+                    </p>
                   </div>
                 </div>
               </SwiperSlide>
             ))}
           </Swiper>
         </div>
-      </section>
-    </>
+      </div>
+    </div>
   );
 }
 
