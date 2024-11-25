@@ -16,7 +16,7 @@ import "swiper/css/effect-coverflow";
 import { useNavigate } from "react-router-dom";
 
 export default () => {
-  const smallScreen=useMediaQuery({query:'(max-width: 640px)'})
+  const smallScreen = useMediaQuery({ query: "(max-width: 640px)" });
   const navigate = useNavigate();
   const movieList = MovieList();
   const baseUrl = "https://image.tmdb.org/t/p/original";
@@ -75,7 +75,8 @@ export default () => {
                 },
               }
             : false
-        }        navigation={true}
+        }
+        navigation={true}
         modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
         className="w-full sm:h-[50%] "
       >
@@ -85,12 +86,20 @@ export default () => {
             className="w-[80%] sm:w-[60%] md:w-[40%] lg:w-[30%] xl:w-[25%] h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh]"
           >
             <div className="group relative shadow-xl rounded-xl overflow-hidden w-full h-full">
-              <img
-                onClick={() => clicked(movie)}
-                src={`${baseUrl}${movie.poster_path}`}
-                alt={`Movie Poster ${index}`}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-              />
+              {movie.poster_path ? (
+                <img
+                  onClick={() => clicked(movie)}
+                  src={`${baseUrl}${movie.poster_path}`}
+                  alt={`Movie Poster ${index}`}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                />
+              ) : (
+                <img
+                  src={logo}
+                  className="w-full sm:h-50 md:h-80 object-fill rounded"
+                />
+              )}
+
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
               <div className="absolute bottom-4 left-4 text-white">
                 <h3 className="text-base sm:text-lg font-bold">
@@ -105,7 +114,6 @@ export default () => {
           </SwiperSlide>
         ))}
       </Swiper>
-
     </div>
   );
 };
