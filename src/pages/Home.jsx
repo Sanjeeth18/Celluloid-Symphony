@@ -1,18 +1,26 @@
-import React from 'react'
-import Header from '../components/Header'
-import Nowplaying from '../components/Lists'
-import Footer from '../components/Footer'
-import Lists_1 from '../components/Lists_1'
+import React from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import Mainswiper from "../components/Mainswiper";
+import SeriesList from "../data/seriesdata";
+import Popular from "../data/Popular";
+import Upcoming from "../data/upcoming";
+import MovieSwiper from "../components/MovieSwiper";
 
 function Home() {
+  const serieslist = SeriesList();
+  const popmovie = Popular();
+  const upcome = Upcoming();
+
   return (
-    <div className='bg-white m-3'>
-        <Header swiper={true} nowplaying={true} lists={true}/>
-        {/* <Nowplaying/>
-        <Lists_1/> */}
-        <Footer/>
+    <div>
+      <Header swiper={true} nowplaying={true} lists={true} />
+      <Mainswiper />
+      <MovieSwiper data={popmovie} title="Movies" isMovie={true} />
+      <MovieSwiper data={serieslist} title="Series" isMovie={false} />
+      <MovieSwiper data={upcome} title="Upcoming" isMovie={true} /> <Footer />
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;

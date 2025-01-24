@@ -8,9 +8,9 @@ function MovieDetails() {
   const location = useLocation();
   const movie = location.state;
   return (
-    <div className="m-3">
-      <Header  moviesDetails={true}  datas={movie}/>
-      {/* <Details detail={movie} /> */}
+    <div >
+      <Header  />
+      <Details detail={movie} />
       <Footer />
     </div>
   );

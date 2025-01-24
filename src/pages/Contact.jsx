@@ -5,8 +5,9 @@ import ContactDetails from '../components/contactDetails'
 
 function Contact() {
   return (
-    <div className="m-3">
-      <Header swiper={true}  contact={true}  />
+    <div >
+      <Header/>
+      <ContactDetails/>
       <Footer />
     </div>
   )

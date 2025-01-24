@@ -1,27 +1,12 @@
 import React, { useState } from "react";
-import Mainswiper from "./Mainswiper";
-import { useNavigate } from "react-router-dom";
-import Aboutcontent from "./Aboutcontent";
-import ContactDetails from "./contactDetails";
-import Details from "./Details";
-import Results from "./Results";
-import Nowplaying from "./Lists";
-import Lists_1 from "./Lists_1";
+import { useLocation, useNavigate } from "react-router-dom";
 
-function Header({
-  nowplaying = false,
-  lists = false,
-  swiper = false,
-  about = false,
-  contact = false,
-  moviesDetails = false,
-  search = false,
-  datas = [],
-}) {
+function Header({}) {
   const [searchResults, setSearchResults] = useState([]);
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location=useLocation();
 
   const navigate = useNavigate();
 
@@ -47,12 +32,12 @@ function Header({
   };
 
   return (
-    <section className="bg-gradient-to-b from-indigo-200 via-lime-200 to-sky-200 text-gray-800 rounded-2xl p-4 mb-3 shadow-sm">
-      <div className="container mx-auto py-10">
+    <section className="bg-gray-800 text-gray-100 p-2 shadow-md">
+      <div className="container mx-auto py-6">
         <div className="flex px-4 items-center">
           {/* Menu Icon */}
           <button
-            className="mr-5 lg:hidden border border-gray-400 rounded-lg p-2 sm:block"
+            className="mr-5 lg:hidden border border-gray-600 bg-gray-700 text-gray-100 rounded-lg p-2"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <svg
@@ -60,7 +45,7 @@ function Header({
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth="2"
-              stroke="gray"
+              stroke="currentColor"
               className="w-6 h-6"
             >
               <path
@@ -74,42 +59,43 @@ function Header({
           {/* Title */}
           <a
             href=""
-            className="text-3xl lg:text-6xl font-extrabold my-auto pr-5 md:border-r border-gray-400"
+            className="text-3xl lg:text-5xl font-bold my-auto pr-5 md:border-r border-gray-600 text-green-500"
           >
             Celluloid Symphony
           </a>
 
           {/* Menu for larger screens */}
-          <div className="hidden md:flex my-auto text-xl pl-5">
-            <ul className="flex">
-              <li className="px-4 py-2 mx-2 bg-gradient-to-r from-indigo-300 via-lime-300 to-sky-300 hover:from-sky-300 hover:to-indigo-300 rounded-lg shadow-md hover:shadow-lg transition">
-                <a href="/" className="px-3">
-                  Home
-                </a>
-              </li>
-              <li className="px-4 py-2 mx-2 bg-gradient-to-r from-indigo-300 via-lime-300 to-sky-300 hover:from-sky-300 hover:to-indigo-300 rounded-lg shadow-md hover:shadow-lg transition">
-                <a href="/about" className="px-3">
-                  About
-                </a>
-              </li>
-              <li className="px-4 py-2 mx-2 bg-gradient-to-r from-indigo-300 via-lime-300 to-sky-300 hover:from-sky-300 hover:to-indigo-300 rounded-lg shadow-md hover:shadow-lg transition">
-                <a href="/contact" className="px-3">
-                  Contact
-                </a>
-              </li>
-            </ul>
+          <div className="hidden md:flex ml-5 space-x-6 text-lg">
+            <a
+              href="/"
+              className={`py-2 px-4 text-gray-100 ${location.pathname=="/"?"border-green-400":""} hover:text-green-400 border-b-2 border-transparent hover:border-green-500 transition`}
+            >
+              Home
+            </a>
+            <a
+              href="/about"
+              className={`py-2 px-4 ${location.pathname=="/about"?"border-green-400":""} text-gray-100 hover:text-green-400 border-b-2 border-transparent hover:border-green-500 transition`}
+            >
+              About
+            </a>
+            <a
+              href="/contact"
+              className={`py-2 px-4 text-gray-100 ${location.pathname=="/contact"?"border-green-400":""} hover:text-green-400 border-b-2 border-transparent hover:border-green-500 transition`}
+            >
+              Contact
+            </a>
           </div>
 
           {/* Search Input (Hidden on large screens) */}
           <div className="hidden lg:flex ml-auto">
             <form onSubmit={handleSubmit} className="flex items-center">
               <input
-                className="p-3 w-60 rounded-l-lg outline-none text-black border-none focus:ring-2 focus:ring-lime-300"
+                className="p-3 w-60 text-gray-900 rounded-l-md border border-gray-600 focus:ring-2 focus:ring-green-500 outline-none"
                 placeholder="Search..."
                 onChange={handleChange}
-              ></input>
+              />
               <button
-                className="flex py-3 px-5 bg-gradient-to-r from-indigo-300 to-sky-300 hover:from-sky-300 hover:to-indigo-300 text-gray-800 rounded-r-lg shadow-md hover:shadow-lg transition"
+                className="py-3 px-4 bg-green-500 text-gray-100 hover:bg-green-600 rounded-r-md shadow-md transition"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -139,7 +125,7 @@ function Header({
                     fill="none"
                     viewBox="0 0 24 24"
                     strokeWidth="2"
-                    stroke="gray"
+                    stroke="white"
                     className="w-5 h-5"
                   >
                     <path
@@ -156,85 +142,79 @@ function Header({
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="mt-5 text-center">
-            <ul className="block text-lg">
-              <li className="px-3 py-2 mx-auto bg-gradient-to-r from-indigo-300 via-lime-300 to-sky-300 hover:from-sky-300 hover:to-indigo-300 rounded-lg shadow-md hover:shadow-lg transition">
-                <a href="/">Home</a>
-              </li>
-              <li className="px-3 py-2 mx-auto bg-gradient-to-r from-indigo-300 via-lime-300 to-sky-300 hover:from-sky-300 hover:to-indigo-300 rounded-lg shadow-md hover:shadow-lg transition">
-                <a href="/about">About</a>
-              </li>
-              <li className="px-3 py-2 mx-auto bg-gradient-to-r from-indigo-300 via-lime-300 to-sky-300 hover:from-sky-300 hover:to-indigo-300 rounded-lg shadow-md hover:shadow-lg transition">
-                <a href="/contact">Contact</a>
-              </li>
-              {/* Search Input for Mobile Menu */}
-              <li className="mt-4">
-                <form
-                  onSubmit={handleSubmit}
-                  className="flex items-center justify-center"
+          <aside
+            className={`fixed top-0 left-0 w-64 h-full bg-gray-800 shadow-lg transform transition-transform duration-300 ${
+              isMenuOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
+          >
+            <div className="flex flex-col h-full">
+              {/* Close Button */}
+              <button
+                className="ml-auto p-4 text-gray-100 hover:text-green-400"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  stroke="currentColor"
+                  className="w-6 h-6"
                 >
-                  <input
-                    className="p-3 w-60 rounded-l-lg text-black outline-none border-none focus:ring-2 focus:ring-lime-300"
-                    placeholder="Search..."
-                    onChange={handleChange}
-                  ></input>
-                  <button
-                    className="flex py-3 px-5 bg-gradient-to-r from-indigo-300 to-sky-300 hover:from-sky-300 hover:to-indigo-300 text-gray-800 rounded-r-lg shadow-md hover:shadow-lg transition"
-                    disabled={isLoading}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+
+              {/* Menu Items */}
+              <ul className="space-y-4 p-4 text-center">
+                <li>
+                  <a
+                    href="/"
+                    className="block py-2 px-4 text-gray-100 hover:text-green-400 border-b-2 border-transparent hover:border-green-500 transition"
                   >
-                    {isLoading ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        className="animate-spin w-5 h-5"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 2.137.842 4.084 2.209 5.561l1.791-1.27z"
-                        ></path>
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="2"
-                        stroke="gray"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                        />
-                      </svg>
-                    )}
-                  </button>
-                </form>
-              </li>
-            </ul>
-          </div>
+                    Home
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/about"
+                    className="block py-2 px-4 text-gray-100 hover:text-green-400 border-b-2 border-transparent hover:border-green-500 transition"
+                  >
+                    About
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/contact"
+                    className="block py-2 px-4 text-gray-100 hover:text-green-400 border-b-2 border-transparent hover:border-green-500 transition"
+                  >
+                    Contact
+                  </a>
+                </li>
+                <li className="mt-3">
+                  <form onSubmit={handleSubmit} className="flex items-center">
+                    <input
+                      className="p-3 w-full rounded-l-md border border-gray-600 focus:ring-2 focus:ring-green-500 outline-none"
+                      placeholder="Search..."
+                      onChange={handleChange}
+                    />
+                    <button
+                      className="py-3 px-4 bg-green-500 text-gray-100 hover:bg-green-600 rounded-r-md shadow-md transition"
+                      disabled={isLoading}
+                    >
+                      Search
+                    </button>
+                  </form>
+                </li>
+              </ul>
+            </div>
+          </aside>
         )}
       </div>
-
-      {/* Dynamic Content */}
-      {swiper && <Mainswiper />}
-      {nowplaying && <Nowplaying />}
-      {lists && <Lists_1 />}
-      {about && <Aboutcontent />}
-      {contact && <ContactDetails />}
-      {moviesDetails && <Details detail={datas} />}
-      {search && <Results query={datas} />}
     </section>
   );
 }
