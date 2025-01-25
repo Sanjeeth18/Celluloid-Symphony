@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
+import "aos/dist/aos.css";
 
 function Footer() {
+
   return (
     <footer className="text-white bg-gray-800">
       <div className="flex flex-wrap py-12">
         {/* About Section */}
-        <div className="p-5 lg:p-10 w-full md:w-1/3">
+        <div
+          className="p-5 lg:p-10 w-full md:w-1/3"
+          data-aos="fade-right"
+          data-aos-offset="300"
+          data-aos-once="false"
+          data-aos-mirror="true"
+        >
           <h2 className="font-extrabold text-left text-2xl text-green-400">
             Celluloid Symphony
           </h2>
@@ -20,7 +28,13 @@ function Footer() {
         </div>
 
         {/* Address Section */}
-        <div className="p-5 lg:p-10 w-full md:w-1/3">
+        <div
+          className="p-5 lg:p-10 w-full md:w-1/3"
+          data-aos="zoom-in"
+          data-aos-offset="300"
+          data-aos-once="false"
+          data-aos-mirror="true"
+        >
           <h2 className="font-extrabold text-left text-xl text-green-400">
             Address
           </h2>
@@ -32,7 +46,13 @@ function Footer() {
         </div>
 
         {/* Inquiries Section */}
-        <div className="p-5 lg:p-10 w-full md:w-1/3">
+        <div
+          className="p-5 lg:p-10 w-full md:w-1/3"
+          data-aos="fade-left"
+          data-aos-offset="100"
+          data-aos-once="false"
+          data-aos-mirror="true"
+        >
           <h2 className="font-extrabold text-left text-xl text-green-400">
             Inquiries
           </h2>
@@ -132,13 +152,19 @@ function Footer() {
                 </svg>
               </a>
             </li>
-            
           </ul>
         </div>
       </div>
 
       {/* Footer Bottom Section */}
-      <div className="text-center text-gray-500 border-t py-3 border-gray-600 pt-3">
+      <div
+        className="text-center text-gray-500 border-t py-3 border-gray-600 pt-3"
+        data-aos="flip-left"
+        data-aos-offset="10"
+        data-aos-once="false"
+        data-aos-mirror="true"
+        data-aos-delay="200"
+      >
         <span>© {new Date().getFullYear()} All Rights Reserved</span>
       </div>
     </footer>

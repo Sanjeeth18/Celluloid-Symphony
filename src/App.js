@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, BrowserRouter } from "react-router-dom";
 import "./App.css";
 import Home from "./pages/Home";
 import About from "../src/pages/About";
@@ -14,8 +14,7 @@ function App() {
     document.title = "Celluloid Symphony - Explore Movies"; 
   }, []); 
   return (
-    <>
-      <Router>
+    <BrowserRouter>
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route exact path="/details" element={<MovieDetails />} />
@@ -23,8 +22,7 @@ function App() {
           <Route exact path="/about" element={<About />} />
           <Route exact path='/search' element={<Search/>} />
         </Routes>
-      </Router>
-    </>
+    </BrowserRouter>
   );
 }
 

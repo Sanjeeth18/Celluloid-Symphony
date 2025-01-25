@@ -18,7 +18,7 @@ function Details(props) {
   return (
     <div className="p-4  bg-gradient-to-b bg-gray-900  shadow-lg text-gray-100 overflow-hidden">
       <div className="container mx-auto p-4">
-        <div className="flex flex-col md:flex-row bg-gray-900 rounded-lg shadow-md overflow-hidden">
+        <div className="flex flex-col md:flex-row bg-gray-800 rounded-lg shadow-md overflow-hidden">
           {/* Detail Poster */}
           <div className="w-full md:w-1/3 p-4 bg-gray-800 flex-shrink-0">
             {detail.poster_path ? (
@@ -37,7 +37,7 @@ function Details(props) {
           </div>
 
           {/* Detail Info */}
-          <div className="w-full md:w-2/3 p-6 overflow-y-auto">
+          <div className="w-full md:w-2/3 p-6 shadow-lg overflow-y-auto">
             <h2 className="text-4xl text-left font-bold text-green-400 mb-4 border-b-2 border-green-500 pb-2">
               {detail.title || detail.original_name}
             </h2>
