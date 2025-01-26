@@ -14,10 +14,10 @@ function MovieDetails() {
   }, []);
 
   return (
-    <div>
+    <div className=" overflow-hidden">
       <Header />
       <Details detail={movie} />
-      <Footer />
+      <Footer  enableAnimation={true}/>
     </div>
   );
 }

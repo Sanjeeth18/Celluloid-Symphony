@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-function Header({}) {
+function Header() {
   const [searchResults, setSearchResults] = useState([]);
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -19,7 +19,7 @@ function Header({}) {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `https://api.themoviedb.org/3/search/multi?api_key=44138842cb5326f8d36361f3de1243ad&query=${query}`
+        `https://api.themoviedb.org/3/search/multi?api_key=db8d53ea7f93c34789d584745abbbd08&query=${query}`
       );
       const data = await response.json();
       setSearchResults(data.results);
@@ -58,37 +58,41 @@ function Header({}) {
 
           {/* Title */}
           <a
-            href=""
+            href="/"
             className="text-3xl lg:text-5xl font-bold my-auto pr-5 md:border-r border-gray-600 text-green-500"
           >
             Celluloid Symphony
           </a>
 
           {/* Menu for larger screens */}
-          <div className="hidden md:flex ml-5 space-x-6 text-lg">
+          <div className="hidden md:flex ml-5 space-x-6 text-lg scroll-smooth">
             <Link
               to="/"
-              className={`py-2 px-4 text-gray-100 ${
+              className={`py-2 px-4 text-gray-100 border-b-2 ${
                 location.pathname === "/"
                   ? "border-green-400"
-                  : "hover:text-green-400"
-              } border-b-2 border-transparent hover:border-green-500 transition`}
+                  : "border-transparent"
+              } hover:text-green-400 hover:border-green-500 transition`}
             >
               Home
             </Link>
             <Link
               to="/about"
-              className={`py-2 px-4 ${
-                location.pathname === "/about" ? "border-green-400" : ""
-              } text-gray-100 hover:text-green-400 border-b-2 border-transparent hover:border-green-500 transition`}
+              className={`py-2 px-4 border-b-2 ${
+                location.pathname === "/about"
+                  ? "border-green-400"
+                  : "border-transparent"
+              } text-gray-100 hover:text-green-400   hover:border-green-500 transition`}
             >
               About
             </Link>
             <Link
               to="/contact"
               className={`py-2 px-4 text-gray-100 ${
-                location.pathname === "/contact" ? "border-green-400" : ""
-              } hover:text-green-400 border-b-2 border-transparent hover:border-green-500 transition`}
+                location.pathname === "/contact"
+                  ? "border-green-400"
+                  : "border-transparent "
+              } hover:text-green-400 border-b-2  hover:border-green-500 transition`}
             >
               Contact
             </Link>
@@ -98,12 +102,12 @@ function Header({}) {
           <div className="hidden lg:flex ml-auto">
             <form onSubmit={handleSubmit} className="flex items-center">
               <input
-                className="p-3 w-60 text-gray-900 rounded-l-md border border-gray-600 focus:ring-2 focus:ring-green-500 outline-none"
+                className="p-3 w-60 text-gray-900 rounded-l-md border border-gray-600 focus:ring-2  outline-none"
                 placeholder="Search..."
                 onChange={handleChange}
               />
               <button
-                className="py-3 px-4 bg-green-500 text-gray-100 hover:bg-green-600 rounded-r-md shadow-md transition"
+                className="h-full py-3 px-4 bg-green-500 text-gray-100 hover:bg-green-600 rounded-r-md shadow-md transition flex items-center justify-center"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -155,7 +159,7 @@ function Header({}) {
             {/* Background overlay */}
             <div
               className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-40"
-              onClick={() => setIsMenuOpen(false)} // Close menu when clicking the background
+              onClick={() => setIsMenuOpen(false)} 
             ></div>
 
             {/* Sidebar */}
@@ -213,19 +217,25 @@ function Header({}) {
                     </a>
                   </li>
                   <li className="mt-3">
-                    <form onSubmit={handleSubmit} className="flex items-center">
-                      <input
-                        className="p-3 w-full rounded-l-md border text-gray-900 border-gray-600 focus:ring-2 focus:ring-green-500 outline-none"
-                        placeholder="Search..."
-                        onChange={handleChange}
-                      />
-                      <button
-                        className="py-3 px-4 bg-green-500 text-gray-100 hover:bg-green-600 rounded-r-md shadow-md transition"
-                        disabled={isLoading}
+                    <div className="flex items-center">
+                      {" "}
+                      <form
+                        onSubmit={handleSubmit}
+                        className="flex items-center"
                       >
-                        Search
-                      </button>
-                    </form>
+                        <input
+                          className="p-3 w-full rounded-l-md border text-gray-900 border-gray-600 focus:ring-2 focus:ring-green-500 outline-none"
+                          placeholder="Search..."
+                          onChange={handleChange}
+                        />
+                        <button
+                          className="h-full py-3 px-4 bg-green-500 text-gray-100 hover:bg-green-600 rounded-r-md shadow-md transition"
+                          disabled={isLoading}
+                        >
+                          Search
+                        </button>{" "}
+                      </form>
+                    </div>
                   </li>
                 </ul>
               </div>

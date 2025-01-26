@@ -2,7 +2,7 @@ import React from "react";
 
 function Aboutcontent() {
   return (
-    <div className="bg-gradient-to-b from-gray-800 to-gray-900 py-16">
+    <div className="bg-gradient-to-b bg-gray-900 py-16">
       <div className="container mx-auto px-4">
         {/* Title */}
         <h2

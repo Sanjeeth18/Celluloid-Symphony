@@ -13,15 +13,12 @@ function Search() {
     Aos.init({ duration: 1000 });
   }, []);
 
-  useEffect(() => {
-    console.log("Search : ", datas);
-  }, []);
 
   return (
-    <div>
+    <div className="overflow-hidden">
       <Header />
       <Results query={datas} />
-      <Footer />
+      <Footer  enableAnimation={true}/>
     </div>
   );
 }

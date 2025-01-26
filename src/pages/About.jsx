@@ -11,10 +11,10 @@ function About() {
   }, []);
 
   return (
-    <div>
+    <div className=" overflow-hidden">
       <Header />
       <Aboutcontent />
-      <Footer />
+      <Footer enableAnimation={true} />
     </div>
   );
 }

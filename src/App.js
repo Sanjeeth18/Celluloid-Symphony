@@ -7,6 +7,7 @@ import MovieDetails from "./pages/MovieDetails";
 import Contact from "./pages/Contact";
 import Search from "./pages/Search";
 import { useEffect } from "react";
+import Actors from "./pages/Actors";
 
 function App() {
 
@@ -21,6 +22,8 @@ function App() {
           <Route exact path="/contact" element={<Contact/>}/>
           <Route exact path="/about" element={<About />} />
           <Route exact path='/search' element={<Search/>} />
+          <Route exact path='/actors' element={<Actors/>} />
+
         </Routes>
     </BrowserRouter>
   );

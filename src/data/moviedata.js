@@ -7,7 +7,7 @@ const MovieList = () => {
     const getMovie = async () => {
       try {
         const response = await fetch(
-          'https://api.themoviedb.org/3/discover/movie?api_key=44138842cb5326f8d36361f3de1243ad'
+          'https://api.themoviedb.org/3/discover/movie?api_key=db8d53ea7f93c34789d584745abbbd08'
         );
         if (!response.ok) {
           throw new Error('Failed to fetch movie data');

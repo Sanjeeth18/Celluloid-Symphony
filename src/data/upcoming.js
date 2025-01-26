@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 
 const Upcoming = () => {
   const [upcome, setUpcome] = useState([]);
@@ -7,7 +7,7 @@ const Upcoming = () => {
     const getUpcome = async () => {
       try {
         const response = await fetch(
-          'https://api.themoviedb.org/3/movie/upcoming?api_key=44138842cb5326f8d36361f3de1243ad'
+          'https://api.themoviedb.org/3/movie/upcoming?api_key=db8d53ea7f93c34789d584745abbbd08'
         );
         if (!response.ok) {
           throw new Error('Failed to fetch movie data');
