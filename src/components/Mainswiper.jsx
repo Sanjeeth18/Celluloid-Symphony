@@ -1,4 +1,4 @@
-import React ,{useEffect,useState}from "react";
+import React, { useEffect, useState } from "react";
 import MovieList from "../data/moviedata";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
@@ -23,14 +23,12 @@ export default () => {
   const movieList = MovieList();
   const baseUrl = "https://image.tmdb.org/t/p/original";
 
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-      }, 1500);
-      return () => clearTimeout(timer);
-    }, []);
-  
-  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const clicked = async (item) => {
     const BASE_URL = "https://api.themoviedb.org/3";
@@ -204,6 +202,7 @@ export default () => {
       </h2>
       <Swiper
         effect={"coverflow"}
+        speed="1000"
         grabCursor={true}
         loop={true}
         centeredSlides={true}

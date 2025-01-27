@@ -4,7 +4,7 @@ import "aos/dist/aos.css";
 function Footer({ enableAnimation = false }) {
   return (
     <footer className="text-white bg-gray-800">
-      <div className="flex flex-wrap py-12">
+      <div className="flex flex-wrap py-8">
         {/* About Section */}
         <div
           className={`p-5 lg:p-10 w-full md:w-1/3 ${

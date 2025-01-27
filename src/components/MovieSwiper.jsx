@@ -227,7 +227,7 @@ function MovieSwiper({ data, title, isMovie = true, upcoming = false }) {
   }
 
   return (
-    <div className="bg-gray-900 px-6 md:px-8 lg:px-10">
+    <div className="bg-gray-900 pb-10 px-6 md:px-8 lg:px-10">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between pt-10 lg:pt-16 gap-6">
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-500 to-purple-600">
           {title}
@@ -266,7 +266,7 @@ function MovieSwiper({ data, title, isMovie = true, upcoming = false }) {
         pagination={{
           clickable: true,
           renderBullet: (index, className) => {
-            return `<span class="${className} w-3 h-3 md:w-3 md:h-3 bg-white rounded-full"></span>`;
+            return `<span class="${className} w-3 h-3 md:w-3 md:h-3 bg-green-400 rounded-full"></span>`;
           },
         }}
         breakpoints={{
