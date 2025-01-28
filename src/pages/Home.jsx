@@ -42,7 +42,7 @@ function Home() {
       <MovieSwiper data={Tseries} title="Trending Series" isMovie={true} />
       <MovieSwiper data={serieslist} title="Series" isMovie={false} />{" "}
       <MovieSwiper data={upcome} title="Upcoming" isMovie={true} upcoming={true}/>{" "}
-      <Footer enableAnimation={true} />
+      <Footer enableAnimation={false} />
     </div>
   );
 }
