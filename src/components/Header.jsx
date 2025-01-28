@@ -7,28 +7,50 @@ function Header() {
   const [isLoading, setIsLoading] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-
   const navigate = useNavigate();
 
-  const handleChange = (event) => {
-    setQuery(event.target.value);
+  const handleChange = async (event) => {
+    const newQuery = event.target.value;
+    setQuery(newQuery);
+
+    if (newQuery.trim() === "") {
+      setSearchResults([]);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/search/multi?api_key=db8d53ea7f93c34789d584745abbbd08&query=${newQuery}`
+      );
+      const data = await response.json();
+      setSearchResults(data.results || []);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    if (event.preventDefault) event.preventDefault(); // Prevent form submission if triggered by the form
+    if (query.trim() === "") return;
+
     setIsLoading(true);
     try {
       const response = await fetch(
         `https://api.themoviedb.org/3/search/multi?api_key=db8d53ea7f93c34789d584745abbbd08&query=${query}`
       );
       const data = await response.json();
-      setSearchResults(data.results);
       setIsLoading(false);
       navigate("/search", { state: { searchResults: data.results } });
     } catch (error) {
       console.error("Error fetching search results:", error);
       setIsLoading(false);
     }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setQuery(suggestion.title || suggestion.name); // Set the clicked suggestion in the input
+    setSearchResults([]); // Clear the suggestions list
+    handleSubmit({ preventDefault: () => {} }); // Manually call handleSubmit
   };
 
   return (
@@ -98,13 +120,14 @@ function Header() {
             </Link>
           </div>
 
-          {/* Search Input (Hidden on large screens) */}
-          <div className="hidden lg:flex ml-auto">
+          {/* Search Input */}
+          <div className="hidden lg:flex ml-auto relative">
             <form onSubmit={handleSubmit} className="flex items-center">
               <input
                 className="p-3 w-60 text-gray-900 rounded-l-md border border-gray-600 focus:ring-2 outline-none"
                 placeholder="Search..."
                 onChange={handleChange}
+                value={query}
               />
               <button
                 className="h-full py-3 px-4 bg-green-500 text-gray-100 hover:bg-green-600 rounded-r-md shadow-md transition flex items-center justify-center"
@@ -149,9 +172,23 @@ function Header() {
                 )}
               </button>
             </form>
+            {searchResults.length > 0 && (
+              <div className="absolute top-full mt-2 w-full bg-gray-700 rounded-md shadow-lg z-50">
+                <ul>
+                  {searchResults.slice(0, 5).map((result) => (
+                    <li
+                      key={result.id}
+                      className="p-2 text-gray-100 hover:bg-gray-600 cursor-pointer"
+                      onClick={() => handleSuggestionClick(result)}
+                    >
+                      {result.title || result.name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
-
         {/* Mobile Menu */}
         {isMenuOpen && (
           <>
@@ -216,15 +253,19 @@ function Header() {
                     </a>
                   </li>
                   <li className="mt-3">
-                    <div className="flex items-center">
-                      <form onSubmit={handleSubmit} className="flex items-center">
+                    <div className="relative flex items-center">
+                      <form
+                        onSubmit={handleSubmit}
+                        className="flex items-center w-full"
+                      >
                         <input
-                          className="p-3 w-full rounded-l-md border text-gray-900 border-gray-600 focus:ring-2 focus:ring-green-500 outline-none"
+                          className="p-3 w-full h-12 rounded-l-md border text-gray-900 border-gray-600 focus:ring-2  outline-none"
                           placeholder="Search..."
                           onChange={handleChange}
+                          value={query}
                         />
                         <button
-                          className="h-full py-3 px-4 bg-green-500 text-gray-100 hover:bg-green-600 rounded-r-md shadow-md transition"
+                          className="h-12 w-12 flex items-center justify-center bg-green-500 text-gray-100 hover:bg-green-600 rounded-r-md shadow-md transition"
                           disabled={isLoading}
                         >
                           {isLoading ? (
@@ -249,10 +290,38 @@ function Header() {
                               ></path>
                             </svg>
                           ) : (
-                            "Search"
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth="2"
+                              stroke="white"
+                              className="w-5 h-5"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                              />
+                            </svg>
                           )}
                         </button>
                       </form>
+                      {searchResults.length > 0 && (
+                        <div className="absolute top-full mt-2 w-full bg-gray-700 rounded-md shadow-lg z-50">
+                          <ul>
+                            {searchResults.slice(0, 5).map((result) => (
+                              <li
+                                key={result.id}
+                                className="p-2 text-gray-100 hover:bg-gray-600 cursor-pointer"
+                                onClick={() => handleSuggestionClick(result)}
+                              >
+                                {result.title || result.name}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   </li>
                 </ul>
