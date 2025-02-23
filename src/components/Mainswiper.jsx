@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import MovieList from "../data/moviedata";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
   EffectCoverflow,
@@ -14,6 +13,14 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-coverflow";
 import { useNavigate } from "react-router-dom";
+import { MovieList } from "../data/datas";
+import {
+  fetchImages,
+  fetchMovieCredits,
+  fetchReviews,
+  fetchTVCredits,
+  fetchVideos,
+} from "../data/Details";
 
 export default () => {
   const smallScreen = useMediaQuery({ query: "(max-width: 640px)" });
@@ -33,128 +40,15 @@ export default () => {
   const clicked = async (item) => {
     const BASE_URL = "https://api.themoviedb.org/3";
 
-    const fetchReviews = async (id, type) => {
-      const url = `${BASE_URL}/${type}/${id}/reviews?language=en-US&page=1`;
-      try {
-        const response = await fetch(url, {
-          headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYjhkNTNlYTdmOTNjMzQ3ODlkNTg0NzQ1YWJiYmQwOCIsIm5iZiI6MTczNzgxNjY0Mi44ODQsInN1YiI6IjY3OTRmYTQyMDljMjUyZTNhYjIzNzY4MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ySw6r3Llu06lHY-0T75EVLrn71bT41ofcZsDLUg_oPo`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error fetching reviews: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return data.results;
-      } catch (error) {
-        console.error("Failed to fetch reviews:", error);
-        return [];
-      }
-    };
-
-    const fetchVideos = async (id, type) => {
-      const url = `${BASE_URL}/${type}/${id}/videos?language=en-US`;
-      try {
-        const response = await fetch(url, {
-          headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYjhkNTNlYTdmOTNjMzQ3ODlkNTg0NzQ1YWJiYmQwOCIsIm5iZiI6MTczNzgxNjY0Mi44ODQsInN1YiI6IjY3OTRmYTQyMDljMjUyZTNhYjIzNzY4MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ySw6r3Llu06lHY-0T75EVLrn71bT41ofcZsDLUg_oPo`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error fetching videos: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return data.results;
-      } catch (error) {
-        console.error("Failed to fetch videos:", error);
-        return [];
-      }
-    };
-
-    const fetchTVCredits = async (id) => {
-      const url = `${BASE_URL}/tv/${id}/credits?language=en-US`;
-      try {
-        const response = await fetch(url, {
-          headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYjhkNTNlYTdmOTNjMzQ3ODlkNTg0NzQ1YWJiYmQwOCIsIm5iZiI6MTczNzgxNjY0Mi44ODQsInN1YiI6IjY3OTRmYTQyMDljMjUyZTNhYjIzNzY4MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ySw6r3Llu06lHY-0T75EVLrn71bT41ofcZsDLUg_oPo`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error fetching TV credits: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return { cast: data.cast, crew: data.crew };
-      } catch (error) {
-        console.error("Failed to fetch TV credits:", error);
-        return { cast: [], crew: [] };
-      }
-    };
-
-    const fetchMovieCredits = async (id) => {
-      const url = `${BASE_URL}/movie/${id}/credits?language=en-US`;
-      try {
-        const response = await fetch(url, {
-          headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYjhkNTNlYTdmOTNjMzQ3ODlkNTg0NzQ1YWJiYmQwOCIsIm5iZiI6MTczNzgxNjY0Mi44ODQsInN1YiI6IjY3OTRmYTQyMDljMjUyZTNhYjIzNzY4MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ySw6r3Llu06lHY-0T75EVLrn71bT41ofcZsDLUg_oPo`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error fetching movie credits: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return { cast: data.cast, crew: data.crew };
-      } catch (error) {
-        console.error("Failed to fetch movie credits:", error);
-        return { cast: [], crew: [] };
-      }
-    };
-
-    const fetchImages = async (id, type) => {
-      const url = `${BASE_URL}/${type}/${id}/images`;
-      try {
-        const response = await fetch(url, {
-          headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYjhkNTNlYTdmOTNjMzQ3ODlkNTg0NzQ1YWJiYmQwOCIsIm5iZiI6MTczNzgxNjY0Mi44ODQsInN1YiI6IjY3OTRmYTQyMDljMjUyZTNhYjIzNzY4MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ySw6r3Llu06lHY-0T75EVLrn71bT41ofcZsDLUg_oPo`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error fetching images: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return {
-          backdrops: data.backdrops || [],
-          posters: data.posters || [],
-        };
-      } catch (error) {
-        console.error("Failed to fetch images:", error);
-        return { backdrops: [], posters: [] };
-      }
-    };
-
     const isTVSeries = item.media_type === "tv" || !!item.first_air_date;
     const type = isTVSeries ? "tv" : "movie";
 
-    const [reviews, videos, credits, images] = await Promise.all([
-      fetchReviews(item.id, type),
-      fetchVideos(item.id, type),
-      isTVSeries ? fetchTVCredits(item.id) : fetchMovieCredits(item.id),
-      fetchImages(item.id, type),
-    ]);
+    const reviews = await fetchReviews(item.id, type);
+    const videos = await fetchVideos(item.id, type);
+    const credits = await (isTVSeries
+      ? fetchTVCredits(item.id)
+      : fetchMovieCredits(item.id));
+    const images = await fetchImages(item.id, type);
 
     navigate("/details", {
       state: {

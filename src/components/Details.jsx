@@ -39,12 +39,6 @@ function Details() {
 
   const baseUrl = "https://image.tmdb.org/t/p/original";
 
-  useEffect(() => {
-    console.log("Selected detail:", detail);
-    console.log("CAST:", cast);
-    console.log("CREW:", crew);
-    console.log("backdrop: ", posters);
-  }, [detail, cast, crew]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -74,8 +68,7 @@ function Details() {
         throw new Error("Failed to fetch member details");
       }
       const memberDetails = await response.json();
-      console.log(memberDetails);
-      navigate("/actors", { state: { memberDetails } }); 
+      navigate("/actors", { state: { memberDetails } });
     } catch (error) {
       console.error("Error fetching member details:", error);
     }
@@ -121,13 +114,13 @@ function Details() {
       <div className="container mx-auto p-4">
         <div className="flex flex-col md:flex-row bg-gray-800 rounded-lg shadow-md">
           {/* Detail Poster */}
-          <div className="w-full md:w-1/3 p-4 bg-gray-800 flex-shrink-0">
+          <div className="w-full h-[70vh] md:w-1/3 p-4 bg-gray-800 flex-shrink-0">
             {detail?.poster_path ? (
-              <img
+              <div className="h-full" ><img
                 src={`${baseUrl}${detail.poster_path}`}
                 alt={detail.title || "Poster"}
-                className="rounded-lg w-full h-auto object-cover mx-auto border-4 border-green-500 shadow-lg"
-              />
+                className="rounded-lg w-full h-full object-fill mx-auto border-4 border-green-500 shadow-lg"
+              /></div>
             ) : (
               <img
                 src={logo}
@@ -255,7 +248,7 @@ function Details() {
                     alt={`Backdrop image ${index + 1} for ${
                       detail.title || "this movie"
                     }`}
-                    className="w-full h-[300px] object-cover rounded-lg shadow-md"
+                    className="w-full h-[300px] object-fill rounded-lg shadow-md"
                   />
                 </SwiperSlide>
               ))}
@@ -286,13 +279,15 @@ function Details() {
             >
               {posters.map((poster, index) => (
                 <SwiperSlide key={index}>
-                  <img
-                    src={`${baseUrl}${poster.file_path}`}
-                    alt={`poster image ${index + 1} for ${
-                      detail.title || "this movie"
-                    }`}
-                    className="w-full h-[600px] object-cover rounded-lg shadow-md"
-                  />
+                  <div className="w-full h-[60vh] max-w-[70vh] mx-auto">
+                    <img
+                      src={`${baseUrl}${poster.file_path}`}
+                      alt={`poster image ${index + 1} for ${
+                        detail.title || "this movie"
+                      }`}
+                      className="w-full h-full object-fill rounded-lg shadow-md"
+                    />
+                  </div>
                 </SwiperSlide>
               ))}
             </Swiper>
