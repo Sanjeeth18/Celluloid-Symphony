@@ -1,336 +1,316 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { searchMulti } from "../services/tmdb";
+import { FiSearch, FiX, FiMenu, FiFilm } from "react-icons/fi";
+
+const NAV_LINKS = [
+  { to: "/",       label: "Home" },
+  { to: "/about",  label: "About" },
+  { to: "/contact",label: "Contact" },
+];
 
 function Header() {
+  const [query, setQuery]               = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [query, setQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading]       = useState(false);
+  const [isMenuOpen, setIsMenuOpen]     = useState(false);
+  const [scrolled, setScrolled]         = useState(false);
+  const searchRef                       = useRef(null);
+  const location                        = useLocation();
+  const navigate                        = useNavigate();
 
-  const handleChange = async (event) => {
-    const newQuery = event.target.value;
-    setQuery(newQuery);
+  // Shrink header on scroll
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-    if (newQuery.trim() === "") {
-      setSearchResults([]);
-      return;
-    }
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    const handler = (e) => {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setSearchResults([]);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
+  // Close menu on route change
+  useEffect(() => { setIsMenuOpen(false); }, [location.pathname]);
+
+  const handleChange = async (e) => {
+    const val = e.target.value;
+    setQuery(val);
+    if (!val.trim()) { setSearchResults([]); return; }
     try {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/search/multi?api_key=db8d53ea7f93c34789d584745abbbd08&query=${newQuery}`
-      );
-      const data = await response.json();
-      setSearchResults(data.results || []);
-    } catch (error) {
-      console.error("Error fetching search results:", error);
-    }
+      const results = await searchMulti(val);
+      setSearchResults(results.slice(0, 5));
+    } catch (_) {}
   };
 
-  const handleSubmit = async (event) => {
-    if (event.preventDefault) event.preventDefault(); // Prevent form submission if triggered by the form
-    if (query.trim() === "") return;
-
+  const handleSubmit = async (e) => {
+    e?.preventDefault();
+    if (!query.trim()) return;
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/search/multi?api_key=db8d53ea7f93c34789d584745abbbd08&query=${query}`
-      );
-      const data = await response.json();
-      setIsLoading(false);
-      navigate("/search", { state: { searchResults: data.results } });
-    } catch (error) {
-      console.error("Error fetching search results:", error);
+      const results = await searchMulti(query);
+      navigate("/search", { state: { searchResults: results } });
+      setSearchResults([]);
+      setQuery("");
+    } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSuggestionClick = (suggestion) => {
-    setQuery(suggestion.title || suggestion.name); // Set the clicked suggestion in the input
-    setSearchResults([]); // Clear the suggestions list
-    handleSubmit({ preventDefault: () => {} }); // Manually call handleSubmit
+  const handleSuggestionClick = (item) => {
+    setQuery(item.title || item.name);
+    setSearchResults([]);
+    navigate("/search", { state: { searchResults: [item] } });
   };
 
   return (
-    <section className="bg-gray-800 text-gray-100 p-2 shadow-md">
-      <div className="container mx-auto py-6">
-        <div className="flex px-4 items-center">
-          {/* Menu Icon */}
-          <button
-            className="mr-5 lg:hidden border border-gray-600 bg-gray-700 text-gray-100 rounded-lg p-2"
+    <motion.header
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? "py-2 shadow-xl" : "py-4"
+      }`}
+      style={{
+        background: scrolled
+          ? "rgba(13, 15, 26, 0.92)"
+          : "rgba(13, 15, 26, 0.75)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        borderBottom: "1px solid rgba(0,240,255,0.1)",
+      }}
+    >
+      <div className="container mx-auto px-4 lg:px-8">
+        <div className="flex items-center gap-4">
+          {/* ── Mobile Menu Button ── */}
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            className="lg:hidden p-2 rounded-xl transition-colors"
+            style={{ color: "var(--color-text-primary)", background: "var(--color-bg-elevated)" }}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="2"
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-              />
-            </svg>
-          </button>
+            {isMenuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
+          </motion.button>
 
-          {/* Title */}
-          <a
-            href="/"
-            className="text-3xl lg:text-5xl font-bold my-auto pr-5 md:border-r border-gray-600 text-green-500"
-          >
-            Celluloid Symphony
-          </a>
+          {/* ── Logo ── */}
+          <Link to="/" className="flex items-center gap-2 flex-shrink-0">
+            <motion.div
+              whileHover={{ rotate: 15, scale: 1.1 }}
+              className="p-1.5 rounded-lg"
+              style={{ background: "var(--color-accent-gold)", color: "#0D0F1A" }}
+            >
+              <FiFilm size={20} />
+            </motion.div>
+            <span
+              className="text-xl lg:text-2xl font-black tracking-tight hidden sm:block"
+              style={{
+                background: "linear-gradient(135deg, var(--color-accent-gold), var(--color-accent-gold2))",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Celluloid Symphony
+            </span>
+          </Link>
 
-          {/* Menu for larger screens */}
-          <div className="hidden md:flex ml-5 space-x-6 text-lg scroll-smooth">
-            <Link
-              to="/"
-              className={`py-2 px-4 text-gray-100 border-b-2 ${
-                location.pathname === "/"
-                  ? "border-green-400"
-                  : "border-transparent"
-              } hover:text-green-400 hover:border-green-500 transition`}
-            >
-              Home
-            </Link>
-            <Link
-              to="/about"
-              className={`py-2 px-4 border-b-2 ${
-                location.pathname === "/about"
-                  ? "border-green-400"
-                  : "border-transparent"
-              } text-gray-100 hover:text-green-400 hover:border-green-500 transition`}
-            >
-              About
-            </Link>
-            <Link
-              to="/contact"
-              className={`py-2 px-4 text-gray-100 ${
-                location.pathname === "/contact"
-                  ? "border-green-400"
-                  : "border-transparent "
-              } hover:text-green-400 border-b-2 hover:border-green-500 transition`}
-            >
-              Contact
-            </Link>
-          </div>
+          {/* ── Desktop Nav ── */}
+          <nav className="hidden lg:flex items-center gap-1 ml-8">
+            {NAV_LINKS.map(({ to, label }) => {
+              const active = location.pathname === to;
+              return (
+                <Link key={to} to={to}>
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className="relative px-4 py-2 rounded-xl text-sm font-semibold transition-colors duration-200"
+                    style={{
+                      color: active ? "var(--color-accent-gold)" : "var(--color-text-muted)",
+                    }}
+                  >
+                    {label}
+                    {active && (
+                      <motion.div
+                        layoutId="nav-indicator"
+                        className="absolute inset-0 rounded-xl"
+                        style={{ background: "rgba(0,240,255,0.1)", border: "1px solid rgba(0,240,255,0.3)" }}
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                  </motion.div>
+                </Link>
+              );
+            })}
+          </nav>
 
-          {/* Search Input */}
-          <div className="hidden lg:flex ml-auto relative">
+          {/* ── Search ── */}
+          <div className="hidden lg:block ml-auto relative" ref={searchRef}>
             <form onSubmit={handleSubmit} className="flex items-center">
-              <input
-                className="p-3 w-60 text-gray-900 rounded-l-md border border-gray-600 focus:ring-2 outline-none"
-                placeholder="Search..."
-                onChange={handleChange}
-                value={query}
-              />
-              <button
-                className="h-full py-3 px-4 bg-green-500 text-gray-100 hover:bg-green-600 rounded-r-md shadow-md transition flex items-center justify-center"
-                disabled={isLoading}
+              <div
+                className="flex items-center rounded-xl overflow-hidden transition-all duration-300"
+                style={{
+                  background: "var(--color-bg-elevated)",
+                  border: "1px solid var(--color-border)",
+                }}
               >
-                {isLoading ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    className="animate-spin w-5 h-5"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 2.137.842 4.084 2.209 5.561l1.791-1.27z"
-                    ></path>
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="white"
-                    className="w-5 h-5"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                    />
-                  </svg>
-                )}
-              </button>
+                <input
+                  className="px-4 py-2.5 w-56 bg-transparent text-sm outline-none placeholder-gray-500"
+                  style={{ color: "var(--color-text-primary)" }}
+                  placeholder="Search movies, series..."
+                  onChange={handleChange}
+                  value={query}
+                />
+                <motion.button
+                  type="submit"
+                  whileTap={{ scale: 0.95 }}
+                  disabled={isLoading}
+                  className="px-4 py-2.5 transition-colors flex items-center justify-center"
+                  style={{ color: "var(--color-accent-gold)" }}
+                  aria-label="Search"
+                >
+                  {isLoading ? (
+                    <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" className="opacity-25" />
+                      <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" className="opacity-75" />
+                    </svg>
+                  ) : (
+                    <FiSearch size={18} />
+                  )}
+                </motion.button>
+              </div>
             </form>
-            {searchResults.length > 0 && (
-              <div className="absolute top-full mt-2 w-full bg-gray-700 rounded-md shadow-lg z-50">
-                <ul>
-                  {searchResults.slice(0, 5).map((result) => (
-                    <li
+
+            {/* Search Suggestions Dropdown */}
+            <AnimatePresence>
+              {searchResults.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                  transition={{ duration: 0.18 }}
+                  className="absolute top-full mt-2 w-full rounded-xl overflow-hidden shadow-2xl"
+                  style={{
+                    background: "var(--color-bg-card)",
+                    border: "1px solid var(--color-border)",
+                    backdropFilter: "blur(16px)",
+                  }}
+                >
+                  {searchResults.map((result) => (
+                    <div
                       key={result.id}
-                      className="p-2 text-gray-100 hover:bg-gray-600 cursor-pointer"
+                      className="px-4 py-3 cursor-pointer transition-colors text-sm font-medium flex items-center gap-3"
+                      style={{ color: "var(--color-text-primary)" }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = "var(--color-bg-elevated)"}
+                      onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
                       onClick={() => handleSuggestionClick(result)}
                     >
-                      {result.title || result.name}
-                    </li>
+                      <FiFilm size={14} style={{ color: "var(--color-accent-gold)", flexShrink: 0 }} />
+                      <span className="truncate">{result.title || result.name}</span>
+                      <span className="ml-auto text-xs px-2 py-0.5 rounded-full flex-shrink-0"
+                        style={{ background: "var(--color-bg-elevated)", color: "var(--color-text-muted)" }}>
+                        {result.media_type}
+                      </span>
+                    </div>
                   ))}
-                </ul>
-              </div>
-            )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
-        {/* Mobile Menu */}
+      </div>
+
+      {/* ── Mobile Sidebar ── */}
+      <AnimatePresence>
         {isMenuOpen && (
           <>
-            {/* Background overlay */}
-            <div
-              className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-40"
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-40"
+              style={{ background: "rgba(0,0,0,0.6)" }}
               onClick={() => setIsMenuOpen(false)}
-            ></div>
-
-            {/* Sidebar */}
-            <aside
-              className={`fixed top-0 left-0 w-64 h-full bg-gray-800 shadow-lg z-50 transform transition-transform duration-300 ${
-                isMenuOpen ? "translate-x-0" : "-translate-x-full"
-              }`}
+            />
+            {/* Drawer */}
+            <motion.aside
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="fixed top-0 left-0 h-full w-72 z-50 flex flex-col"
+              style={{
+                background: "var(--color-bg-card)",
+                borderRight: "1px solid var(--color-border)",
+              }}
             >
-              <div className="flex flex-col h-full">
-                {/* Close Button */}
-                <button
-                  className="ml-auto p-4 text-gray-100 hover:text-green-400"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                    className="w-6 h-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-
-                {/* Menu Items */}
-                <ul className="space-y-4 p-4 text-center">
-                  <li>
-                    <a
-                      href="/"
-                      className="block py-2 px-4 text-gray-100 hover:text-green-400 border-b-2 border-transparent hover:border-green-500 transition"
-                    >
-                      Home
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="/about"
-                      className="block py-2 px-4 text-gray-100 hover:text-green-400 border-b-2 border-transparent hover:border-green-500 transition"
-                    >
-                      About
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="/contact"
-                      className="block py-2 px-4 text-gray-100 hover:text-green-400 border-b-2 border-transparent hover:border-green-500 transition"
-                    >
-                      Contact
-                    </a>
-                  </li>
-                  <li className="mt-3">
-                    <div className="relative flex items-center">
-                      <form
-                        onSubmit={handleSubmit}
-                        className="flex items-center w-full"
-                      >
-                        <input
-                          className="p-3 w-full h-12 rounded-l-md border text-gray-900 border-gray-600 focus:ring-2  outline-none"
-                          placeholder="Search..."
-                          onChange={handleChange}
-                          value={query}
-                        />
-                        <button
-                          className="h-12 w-12 flex items-center justify-center bg-green-500 text-gray-100 hover:bg-green-600 rounded-r-md shadow-md transition"
-                          disabled={isLoading}
-                        >
-                          {isLoading ? (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              className="animate-spin w-5 h-5"
-                            >
-                              <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                              ></circle>
-                              <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 2.137.842 4.084 2.209 5.561l1.791-1.27z"
-                              ></path>
-                            </svg>
-                          ) : (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth="2"
-                              stroke="white"
-                              className="w-5 h-5"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                              />
-                            </svg>
-                          )}
-                        </button>
-                      </form>
-                      {searchResults.length > 0 && (
-                        <div className="absolute top-full mt-2 w-full bg-gray-700 rounded-md shadow-lg z-50">
-                          <ul>
-                            {searchResults.slice(0, 5).map((result) => (
-                              <li
-                                key={result.id}
-                                className="p-2 text-gray-100 hover:bg-gray-600 cursor-pointer"
-                                onClick={() => handleSuggestionClick(result)}
-                              >
-                                {result.title || result.name}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  </li>
-                </ul>
+              {/* Drawer Header */}
+              <div
+                className="flex items-center justify-between p-5"
+                style={{ borderBottom: "1px solid var(--color-border)" }}
+              >
+                <span className="font-black text-lg gradient-text-gold">Celluloid Symphony</span>
+                <motion.button whileTap={{ scale: 0.9 }} onClick={() => setIsMenuOpen(false)}
+                  style={{ color: "var(--color-text-muted)" }}>
+                  <FiX size={22} />
+                </motion.button>
               </div>
-            </aside>
+
+              {/* Nav Links */}
+              <nav className="flex-1 p-4 space-y-2 mt-4">
+                {NAV_LINKS.map(({ to, label }, i) => {
+                  const active = location.pathname === to;
+                  return (
+                    <motion.div
+                      key={to}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.07 }}
+                    >
+                      <Link
+                        to={to}
+                        className="block px-4 py-3 rounded-xl font-semibold transition-all"
+                        style={{
+                          color: active ? "#0D0F1A" : "var(--color-text-primary)",
+                          background: active ? "var(--color-accent-gold)" : "transparent",
+                        }}
+                      >
+                        {label}
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+              </nav>
+
+              {/* Mobile Search */}
+              <div className="p-4" style={{ borderTop: "1px solid var(--color-border)" }}>
+                <form onSubmit={handleSubmit} className="flex rounded-xl overflow-hidden"
+                  style={{ background: "var(--color-bg-elevated)", border: "1px solid var(--color-border)" }}>
+                  <input
+                    className="flex-1 px-4 py-3 bg-transparent text-sm outline-none"
+                    style={{ color: "var(--color-text-primary)" }}
+                    placeholder="Search..."
+                    onChange={handleChange}
+                    value={query}
+                  />
+                  <button type="submit" className="px-4" style={{ color: "var(--color-accent-gold)" }}>
+                    <FiSearch size={18} />
+                  </button>
+                </form>
+              </div>
+            </motion.aside>
           </>
         )}
-      </div>
-    </section>
+      </AnimatePresence>
+    </motion.header>
   );
 }
 

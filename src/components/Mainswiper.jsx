@@ -1,187 +1,272 @@
-import React, { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import {
-  EffectCoverflow,
-  Pagination,
-  Navigation,
-  Autoplay,
-} from "swiper/modules";
+import React, { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/No_Image_Available.jpg";
-import { useMediaQuery } from "react-responsive";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
-import "swiper/css/effect-coverflow";
-import { useNavigate } from "react-router-dom";
-import { MovieList } from "../data/datas";
-import {
-  fetchImages,
-  fetchMovieCredits,
-  fetchReviews,
-  fetchTVCredits,
-  fetchVideos,
-} from "../data/Details";
+import { IMAGE_BASE_URL } from "../services/tmdb";
+import { useMovieList } from "../hooks/useMovieData";
+import { useApp } from "../context/AppContext";
+import SkeletonCard from "./ui/SkeletonCard";
+import { FiStar, FiCalendar, FiPlay, FiInfo, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
-export default () => {
-  const smallScreen = useMediaQuery({ query: "(max-width: 640px)" });
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
+const SLIDE_DURATION = 8000; // ms per slide
 
-  const movieList = MovieList();
-  const baseUrl = "https://image.tmdb.org/t/p/original";
+export default function HeroBanner() {
+  const { navigateToDetails } = useApp();
+  const { data: movieList = [], isLoading } = useMovieList();
 
+  const [current, setCurrent] = useState(0);
+  const [direction, setDirection] = useState(1); // 1=forward, -1=backward
+
+  const total = Math.min(movieList.length, 10); // show top 10
+
+  const goTo = useCallback((idx, dir = 1) => {
+    setDirection(dir);
+    setCurrent((idx + total) % total);
+  }, [total]);
+
+  const next = useCallback(() => goTo(current + 1, 1), [current, goTo]);
+  const prev = useCallback(() => goTo(current - 1, -1), [current, goTo]);
+
+  // Auto-advance
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
+    if (total === 0) return;
+    const id = setInterval(next, SLIDE_DURATION);
+    return () => clearInterval(id);
+  }, [next, total]);
 
-  const clicked = async (item) => {
-    const BASE_URL = "https://api.themoviedb.org/3";
+  if (isLoading) return <SkeletonCard variant="hero" />;
+  if (!movieList.length) return null;
 
-    const isTVSeries = item.media_type === "tv" || !!item.first_air_date;
-    const type = isTVSeries ? "tv" : "movie";
+  const movie = movieList[current];
+  const backdropSrc = movie.backdrop_path
+    ? `${IMAGE_BASE_URL}${movie.backdrop_path}`
+    : movie.poster_path
+      ? `${IMAGE_BASE_URL}${movie.poster_path}`
+      : logo;
 
-    const reviews = await fetchReviews(item.id, type);
-    const videos = await fetchVideos(item.id, type);
-    const credits = await (isTVSeries
-      ? fetchTVCredits(item.id)
-      : fetchMovieCredits(item.id));
-    const images = await fetchImages(item.id, type);
-
-    navigate("/details", {
-      state: {
-        item,
-        reviews,
-        videos,
-        cast: credits.cast,
-        crew: credits.crew,
-        backdrops: images.backdrops,
-        posters: images.posters,
-      },
-    });
+  const slideVariants = {
+    enter: (dir) => ({ opacity: 0, x: dir > 0 ? 80 : -80 }),
+    center: { opacity: 1, x: 0, transition: { duration: 0.65, ease: [0.25, 0.46, 0.45, 0.94] } },
+    exit: (dir) => ({ opacity: 0, x: dir > 0 ? -80 : 80, transition: { duration: 0.4 } }),
   };
 
-  if (isLoading) {
-    return (
-      <div className="p-4 bg-gradient-to-b bg-gray-900 shadow-lg text-gray-100">
-        <div className="container mx-auto p-4">
-          <div className="flex flex-col md:flex-row bg-gray-800 rounded-lg shadow-md animate-pulse">
-            {/* Shimmer for Poster */}
-            <div className="w-full md:w-1/3 p-4 bg-gray-800 flex-shrink-0">
-              <div className="h-64 bg-gray-700 rounded-lg"></div>
-            </div>
-
-            {/* Shimmer for Detail Info */}
-            <div className="w-full md:w-2/3 p-6 shadow-lg">
-              <div className="h-8 bg-gray-700 rounded-lg mb-4"></div>
-              <div className="h-6 bg-gray-700 rounded-lg mb-3"></div>
-              <div className="h-6 bg-gray-700 rounded-lg mb-3"></div>
-              <div className="h-6 bg-gray-700 rounded-lg mb-3"></div>
-              <div className="h-6 bg-gray-700 rounded-lg mb-3"></div>
-              <div className="h-6 bg-gray-700 rounded-lg mb-3"></div>
-              <div className="h-24 bg-gray-700 rounded-lg mt-4"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const contentVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: (i) => ({
+      opacity: 1, y: 0,
+      transition: { duration: 0.6, delay: i * 0.12, ease: "easeOut" },
+    }),
+  };
 
   return (
-    <div className="flex flex-col px-10 items-center py-8 bg-gray-900 text-white">
-      <h2 className="text-4xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 py-5">
-        Featured Movies
-      </h2>
-      <Swiper
-        effect={"coverflow"}
-        speed="1000"
-        grabCursor={true}
-        loop={true}
-        centeredSlides={true}
-        slidesPerView={"auto"}
-        coverflowEffect={{
-          rotate: 50,
-          stretch: 0,
-          depth: 100,
-          modifier: 1,
-          slideShadows: true,
-        }}
-        autoplay={{
-          delay: 2500,
-          disableOnInteraction: false,
-        }}
-        pagination={
-          !smallScreen
-            ? {
-                clickable: true,
-                renderBullet: (index, className) => {
-                  return `<span class="${className} w-3 h-3 md:w-4 md:h-4 bg-green-400 rounded-full"></span>`;
-                },
-              }
-            : false
-        }
-        navigation={true}
-        modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
-        className="w-full sm:h-[50%]"
-      >
-        {movieList.map((movie, index) => (
-          <SwiperSlide
-            key={index}
-            className="w-[80%] sm:w-[60%] md:w-[40%] lg:w-[30%] xl:w-[25%] h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh] text-black"
-          >
-            <div className="group relative shadow-lg rounded-xl overflow-hidden w-full h-full">
-              {movie.poster_path ? (
-                <img
-                  onClick={() => clicked(movie)}
-                  src={`${baseUrl}${movie.poster_path}`}
-                  alt={`Movie Poster ${index}`}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 hover:cursor-pointer"
-                />
-              ) : (
-                <img
-                  src={logo}
-                  alt="No poster available"
-                  className="w-full sm:h-50 md:h-80 object-fill rounded hover:cursor-pointer"
-                  onClick={() => clicked(movie)}
-                />
-              )}
+    <div
+      className="relative w-full overflow-hidden"
+      style={{ height: "clamp(520px, 90vh, 860px)", background: "var(--color-bg-primary)" }}
+    >
+      {/* ── Backdrop Layer ── */}
+      <AnimatePresence custom={direction} initial={false}>
+        <motion.div
+          key={`bg-${movie.id}`}
+          custom={direction}
+          variants={slideVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          className="absolute inset-0"
+        >
+          <img
+            src={backdropSrc}
+            alt={movie.title}
+            className="w-full h-full object-cover"
+          />
+          {/* Multi-layer gradient for readability */}
+          <div className="absolute inset-0"
+            style={{ background: "linear-gradient(to right, rgba(13,15,26,0.97) 0%, rgba(13,15,26,0.75) 45%, rgba(13,15,26,0.25) 100%)" }} />
+          <div className="absolute inset-0"
+            style={{ background: "linear-gradient(to top, rgba(13,15,26,1) 0%, transparent 45%)" }} />
+          <div className="absolute inset-0"
+            style={{ background: "linear-gradient(to bottom, rgba(13,15,26,0.6) 0%, transparent 20%)" }} />
+        </motion.div>
+      </AnimatePresence>
 
-              {/* Overlay */}
-              <div
-                className="absolute inset-0 hover:cursor-pointer bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                onClick={() => clicked(movie)}
-              ></div>
+      {/* ── Content Layer ── */}
+      <div className="absolute inset-0 flex items-center">
+        <div className="container mx-auto px-6 lg:px-16 pb-16 max-w-3xl">
+          <AnimatePresence mode="wait">
+            <motion.div key={`content-${movie.id}`} className="space-y-4">
 
-              {/* Movie Info */}
-              <div
-                className="absolute bottom-4 left-4 text-white"
-                onClick={() => clicked(movie)}
+              {/* Label */}
+              <motion.p
+                custom={0} variants={contentVariants} initial="hidden" animate="visible"
+                className="text-xs font-bold tracking-[0.3em] uppercase"
+                style={{ color: "var(--color-accent-gold)" }}
               >
-                <h3
-                  className="text-base sm:text-lg font-bold hover:cursor-pointer"
-                  onClick={() => clicked(movie)}
+                🎬 Featured Now
+              </motion.p>
+
+              {/* Title */}
+              <motion.h1
+                custom={1} variants={contentVariants} initial="hidden" animate="visible"
+                className="text-4xl sm:text-5xl lg:text-7xl font-black text-white leading-none tracking-tight"
+              >
+                {movie.title || movie.name}
+              </motion.h1>
+
+              {/* Metadata row */}
+              <motion.div
+                custom={2} variants={contentVariants} initial="hidden" animate="visible"
+                className="flex flex-wrap items-center gap-3"
+              >
+                {movie.vote_average > 0 && (
+                  <span className="flex items-center gap-1.5 text-sm font-black px-3 py-1 rounded-full"
+                    style={{ background: "var(--color-accent-gold)", color: "#0D0F1A" }}>
+                    <FiStar size={13} /> {movie.vote_average.toFixed(1)}
+                  </span>
+                )}
+                {movie.release_date && (
+                  <span className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1 rounded-full"
+                    style={{ background: "rgba(255,255,255,0.1)", color: "var(--color-text-primary)", backdropFilter: "blur(8px)" }}>
+                    <FiCalendar size={12} />
+                    {movie.release_date.split("-")[0]}
+                  </span>
+                )}
+                {/* Slide counter */}
+                <span className="text-sm font-semibold" style={{ color: "var(--color-text-dim)" }}>
+                  {String(current + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+                </span>
+              </motion.div>
+
+              {/* Overview */}
+              <motion.p
+                custom={3} variants={contentVariants} initial="hidden" animate="visible"
+                className="text-sm sm:text-base leading-relaxed line-clamp-3 max-w-xl"
+                style={{ color: "var(--color-text-muted)" }}
+              >
+                {movie.overview || "No overview available."}
+              </motion.p>
+
+              {/* CTA Buttons */}
+              <motion.div
+                custom={4} variants={contentVariants} initial="hidden" animate="visible"
+                className="flex flex-wrap gap-3 pt-2"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => navigateToDetails(movie)}
+                  className="flex items-center gap-2.5 px-7 py-3 rounded-2xl text-sm font-black transition-shadow"
+                  style={{
+                    background: "var(--color-accent-gold)",
+                    color: "#0D0F1A",
+                    boxShadow: "0 0 30px rgba(0,240,255,0.4)",
+                  }}
                 >
-                  {movie.title}
-                </h3>
-                <p
-                  className="text-sm mt-1 text-yellow-400 hover:cursor-pointer"
-                  onClick={() => clicked(movie)}
+                  <FiPlay size={16} fill="currentColor" /> Watch Now
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05, background: "rgba(255,255,255,0.15)" }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => navigateToDetails(movie)}
+                  className="flex items-center gap-2.5 px-7 py-3 rounded-2xl text-sm font-bold transition-all"
+                  style={{
+                    background: "rgba(255,255,255,0.08)",
+                    color: "var(--color-text-primary)",
+                    backdropFilter: "blur(12px)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                  }}
                 >
-                  ⭐ {movie.vote_average}
-                </p>
-                <p
-                  className="text-sm font-semibold mt-2 text-gray-300 hover:cursor-pointer"
-                  onClick={() => clicked(movie)}
-                >
-                  {movie.release_date}
-                </p>
-              </div>
-            </div>
-          </SwiperSlide>
+                  <FiInfo size={16} /> More Info
+                </motion.button>
+              </motion.div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* ── Slide Thumbnails (right side desktop) ── */}
+      <div className="absolute right-8 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-3">
+        {movieList.slice(0, total).map((m, i) => (
+          <motion.button
+            key={m.id}
+            onClick={() => goTo(i, i > current ? 1 : -1)}
+            whileHover={{ scale: 1.08 }}
+            className="relative overflow-hidden rounded-xl transition-all duration-300"
+            style={{
+              width: i === current ? 80 : 60,
+              height: i === current ? 48 : 36,
+              opacity: i === current ? 1 : 0.45,
+              border: i === current ? "2px solid var(--color-accent-gold)" : "2px solid transparent",
+              transition: "all 0.3s ease",
+            }}
+          >
+            <img
+              src={m.poster_path ? `${IMAGE_BASE_URL}${m.poster_path}` : logo}
+              alt={m.title}
+              className="w-full h-full object-cover"
+            />
+          </motion.button>
         ))}
-      </Swiper>
+      </div>
+
+      {/* ── Nav Arrows ── */}
+      <div className="absolute bottom-10 left-6 lg:left-16 flex items-center gap-3">
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={prev}
+          className="flex items-center justify-center w-10 h-10 rounded-full transition-colors"
+          style={{
+            background: "rgba(255,255,255,0.1)",
+            border: "1px solid rgba(255,255,255,0.2)",
+            color: "white",
+            backdropFilter: "blur(8px)",
+          }}
+        >
+          <FiChevronLeft size={20} />
+        </motion.button>
+
+        {/* Progress dots */}
+        <div className="flex gap-1.5">
+          {Array.from({ length: total }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i, i > current ? 1 : -1)}
+              className="rounded-full transition-all duration-300"
+              style={{
+                width: i === current ? 24 : 6,
+                height: 6,
+                background: i === current ? "var(--color-accent-gold)" : "rgba(255,255,255,0.3)",
+              }}
+            />
+          ))}
+        </div>
+
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={next}
+          className="flex items-center justify-center w-10 h-10 rounded-full transition-colors"
+          style={{
+            background: "rgba(255,255,255,0.1)",
+            border: "1px solid rgba(255,255,255,0.2)",
+            color: "white",
+            backdropFilter: "blur(8px)",
+          }}
+        >
+          <FiChevronRight size={20} />
+        </motion.button>
+      </div>
+
+      {/* Progress bar */}
+      <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: "rgba(255,255,255,0.1)" }}>
+        <motion.div
+          key={`progress-${current}`}
+          className="h-full"
+          style={{ background: "var(--color-accent-gold)" }}
+          initial={{ width: "0%" }}
+          animate={{ width: "100%" }}
+          transition={{ duration: SLIDE_DURATION / 1000, ease: "linear" }}
+        />
+      </div>
     </div>
   );
-};
+}

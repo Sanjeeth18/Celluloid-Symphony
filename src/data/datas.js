@@ -1,25 +1,14 @@
+/**
+ * data/datas.js — Legacy hooks kept for reference.
+ * New code should use hooks/useMovieData.js (React Query powered).
+ */
 import { useState, useEffect } from "react";
-
-const fetchData = async (url, setData) => {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error("Failed to fetch data");
-    }
-    const data = await response.json();
-    setData(data.results);
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
+import { fetchMovieList, fetchSeriesList, fetchTrendingMovies } from "../services/tmdb";
 
 const MovieList = () => {
   const [movieList, setMovieList] = useState([]);
   useEffect(() => {
-    fetchData(
-      "https://api.themoviedb.org/3/discover/movie?api_key=db8d53ea7f93c34789d584745abbbd08",
-      setMovieList
-    );
+    fetchMovieList().then(setMovieList).catch(console.error);
   }, []);
   return movieList;
 };
@@ -27,23 +16,17 @@ const MovieList = () => {
 const SeriesList = () => {
   const [seriesList, setSeriesList] = useState([]);
   useEffect(() => {
-    fetchData(
-      "https://api.themoviedb.org/3/discover/tv?api_key=db8d53ea7f93c34789d584745abbbd08",
-      setSeriesList
-    );
+    fetchSeriesList().then(setSeriesList).catch(console.error);
   }, []);
   return seriesList;
 };
 
 const TrendMovies = () => {
-  const [trendMovieList, setTrendMovieList] = useState([]);
+  const [trendList, setTrendList] = useState([]);
   useEffect(() => {
-    fetchData(
-      "https://api.themoviedb.org/3/trending/movie/week?api_key=db8d53ea7f93c34789d584745abbbd08&language=en-US",
-      setTrendMovieList
-    );
+    fetchTrendingMovies().then(setTrendList).catch(console.error);
   }, []);
-  return trendMovieList;
+  return trendList;
 };
 
 export { MovieList, SeriesList, TrendMovies };

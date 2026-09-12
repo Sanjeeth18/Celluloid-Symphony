@@ -1,80 +1,98 @@
 import React from "react";
-import logo from "../assets/mine.jpg";
+import { motion } from "framer-motion";
+
+import { FiCalendar, FiBook, FiMail } from "react-icons/fi";
+
+const DETAILS = [
+  { icon: FiCalendar, label: "Date of Birth", value: "16.07.2004" },
+  { icon: FiBook,     label: "College",        value: "PSG College Of Technology" },
+  { icon: FiMail,     label: "Mail ID",           value: "sanjeeth653@gmail.com", href: "mailto:sanjeeth653@gmail.com" },
+];
 
 function ContactDetails() {
   return (
-    <div className="flex justify-center items-center lg:min-h-screen bg-gray-900 text-gray-100">
-      <div className="container p-6 rounded-lg shadow-lg ">
-        <h2
-          className="text-center font-serif py-7 text-5xl lg:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600"
-          data-aos="fade-down"
-          data-aos-offset="300"
-          data-aos-once="false"
-          data-aos-mirror="true"
-        >
+    <div className="min-h-screen py-20 px-4" style={{ background: "var(--color-bg-primary)" }}>
+      {/* Title */}
+      <motion.div
+        initial={{ opacity: 0, y: -24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="text-center mb-12"
+      >
+        <p className="text-xs font-semibold tracking-widest uppercase mb-2"
+          style={{ color: "var(--color-accent-gold)" }}>
+          Get in Touch
+        </p>
+        <h1 className="text-5xl lg:text-7xl font-black gradient-text-cinema leading-tight">
           Contact Details
-        </h2>
+        </h1>
+        <div className="mt-4 mx-auto h-1 w-24 rounded-full"
+          style={{ background: "linear-gradient(90deg, var(--color-accent-gold), var(--color-accent-indigo))" }} />
+      </motion.div>
 
-        <div className="flex flex-col md:flex-row bg-gray-800 justify-center items-center">
-          <div
-            className="w-full sm:my-4 md:w-1/3 py-6 flex justify-center mb-4 md:mb-0"
-            data-aos="zoom-in"
-            data-aos-offset="00"
-            data-aos-once="false"
-            data-aos-mirror="true"
-          >
-            <img
-              src={logo}
-              alt="Sanjeeth J"
-              className="rounded-lg w-full h-auto max-w-xs md:max-w-sm lg:max-w-md object-cover shadow-lg border-4 border-green-500"
-            />
-          </div>
+      {/* Card */}
+      <div className="container mx-auto max-w-4xl">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="flex flex-col md:flex-row gap-8 p-6 md:p-10 rounded-2xl"
+          style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}
+        >
 
-          <div
-            className="w-full my-auto lg:px-10 md:w-2/3 p-6 flex flex-col  rounded-lg shadow-md"
-            data-aos="zoom-in"
-            data-aos-offset="00"
-            data-aos-once="false"
-            data-aos-mirror="true"
-          >
-            <h2 className="text-4xl font-bold text-green-400 mb-6 text-left">
+
+          {/* Info */}
+          <div className="flex-1">
+            <motion.h2
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+              className="text-3xl md:text-4xl font-black gradient-text-gold mb-2"
+            >
               Sanjeeth J
-            </h2>
+            </motion.h2>
+            <div className="h-0.5 w-16 rounded-full mb-6"
+              style={{ background: "linear-gradient(90deg, var(--color-accent-gold), transparent)" }} />
 
-            <p className="text-lg mb-4 text-left">
-              <strong className="text-green-500 text-xl">
-                Date of Birth :
-              </strong>{" "}
-              <span className="text-gray-100 text-xl">16.07.2004</span>
-            </p>
-
-            <p className="text-lg mb-4 text-left">
-              <strong className="text-green-500 text-xl">College :</strong>{" "}
-              <span className="text-gray-100 text-xl">
-                PSG College Of Technology
-              </span>
-            </p>
-
-            <p className="text-lg mb-4 text-left">
-              <strong className="text-green-500 text-xl">Address :</strong>{" "}
-              <span className="text-gray-100 text-xl">
-                50, Periyar Nagar, MSK Palayam, Coimbatore - 641015
-              </span>
-            </p>
-
-            <p className="text-lg mb-4 text-left">
-              <strong className="text-green-500 text-xl">Ph :</strong>{" "}
-              <span className="text-gray-100 text-xl">+91-7548824694</span>
-            </p>
-
-            <p className="text-lg mb-4 text-left">
-              <strong className="text-green-500 text-xl">Mail ID :</strong>{" "}
-              <span className="text-gray-100 text-xl">
-                22pw33@psgtech.ac.in
-              </span>
-            </p>
+            <div className="space-y-4">
+              {DETAILS.map(({ icon: Icon, label, value, href }, i) => (
+                <motion.div
+                  key={label}
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.35 + i * 0.08 }}
+                  className="flex items-start gap-4 py-3"
+                  style={{ borderBottom: "1px solid var(--color-border)" }}
+                >
+                  <div className="p-2 rounded-lg flex-shrink-0"
+                    style={{ background: "var(--color-bg-elevated)", color: "var(--color-accent-gold)" }}>
+                    <Icon size={15} />
+                  </div>
+                  <div>
+                    <p className="text-xs uppercase tracking-wider font-semibold mb-0.5"
+                      style={{ color: "var(--color-text-dim)" }}>
+                      {label}
+                    </p>
+                    {href ? (
+                      <a href={href}
+                        className="text-sm font-medium transition-colors"
+                        style={{ color: "var(--color-text-primary)" }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = "var(--color-accent-gold)"}
+                        onMouseLeave={(e) => e.currentTarget.style.color = "var(--color-text-primary)"}
+                      >
+                        {value}
+                      </a>
+                    ) : (
+                      <p className="text-sm font-medium" style={{ color: "var(--color-text-primary)" }}>
+                        {value}
+                      </p>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
