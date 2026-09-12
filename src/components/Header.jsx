@@ -5,20 +5,20 @@ import { searchMulti } from "../services/tmdb";
 import { FiSearch, FiX, FiMenu, FiFilm } from "react-icons/fi";
 
 const NAV_LINKS = [
-  { to: "/",       label: "Home" },
-  { to: "/about",  label: "About" },
-  { to: "/contact",label: "Contact" },
+  { to: "/", label: "Home" },
+  { to: "/about", label: "About" },
+  { to: "/contact", label: "Contact" },
 ];
 
 function Header() {
-  const [query, setQuery]               = useState("");
+  const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [isLoading, setIsLoading]       = useState(false);
-  const [isMenuOpen, setIsMenuOpen]     = useState(false);
-  const [scrolled, setScrolled]         = useState(false);
-  const searchRef                       = useRef(null);
-  const location                        = useLocation();
-  const navigate                        = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const searchRef = useRef(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   // Shrink header on scroll
   useEffect(() => {
@@ -48,7 +48,7 @@ function Header() {
     try {
       const results = await searchMulti(val);
       setSearchResults(results.slice(0, 5));
-    } catch (_) {}
+    } catch (_) { }
   };
 
   const handleSubmit = async (e) => {
@@ -76,9 +76,8 @@ function Header() {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "py-2 shadow-xl" : "py-4"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "py-2 shadow-xl" : "py-4"
+        }`}
       style={{
         background: scrolled
           ? "rgba(13, 15, 26, 0.92)"
@@ -89,18 +88,7 @@ function Header() {
       }}
     >
       <div className="container mx-auto px-4 lg:px-8">
-        <div className="flex items-center gap-4">
-          {/* ── Mobile Menu Button ── */}
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            className="lg:hidden p-2 rounded-xl transition-colors"
-            style={{ color: "var(--color-text-primary)", background: "var(--color-bg-elevated)" }}
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
-          </motion.button>
-
+        <div className="flex items-center w-full justify-between lg:justify-start">
           {/* ── Logo ── */}
           <Link to="/" className="flex items-center gap-2 flex-shrink-0">
             <motion.div
@@ -150,6 +138,17 @@ function Header() {
               );
             })}
           </nav>
+
+          {/* ── Mobile Menu Button ── */}
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            className="lg:hidden p-2 rounded-xl transition-colors"
+            style={{ color: "var(--color-text-primary)", background: "var(--color-bg-elevated)" }}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
+          </motion.button>
 
           {/* ── Search ── */}
           <div className="hidden lg:block ml-auto relative" ref={searchRef}>
@@ -227,87 +226,51 @@ function Header() {
         </div>
       </div>
 
-      {/* ── Mobile Sidebar ── */}
+      {/* ── Mobile Dropdown Menu ── */}
       <AnimatePresence>
         {isMenuOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-40"
-              style={{ background: "rgba(0,0,0,0.6)" }}
-              onClick={() => setIsMenuOpen(false)}
-            />
-            {/* Drawer */}
-            <motion.aside
-              initial={{ x: "-100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed top-0 left-0 h-full w-72 z-50 flex flex-col"
-              style={{
-                background: "var(--color-bg-card)",
-                borderRight: "1px solid var(--color-border)",
-              }}
-            >
-              {/* Drawer Header */}
-              <div
-                className="flex items-center justify-between p-5"
-                style={{ borderBottom: "1px solid var(--color-border)" }}
-              >
-                <span className="font-black text-lg gradient-text-gold">Celluloid Symphony</span>
-                <motion.button whileTap={{ scale: 0.9 }} onClick={() => setIsMenuOpen(false)}
-                  style={{ color: "var(--color-text-muted)" }}>
-                  <FiX size={22} />
-                </motion.button>
-              </div>
-
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden w-full overflow-hidden shadow-2xl border-b border-[var(--color-border)] bg-[#0A0915]"
+          >
+            <div className="px-4 py-5 flex flex-col gap-3">
               {/* Nav Links */}
-              <nav className="flex-1 p-4 space-y-2 mt-4">
-                {NAV_LINKS.map(({ to, label }, i) => {
-                  const active = location.pathname === to;
-                  return (
-                    <motion.div
-                      key={to}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.07 }}
-                    >
-                      <Link
-                        to={to}
-                        className="block px-4 py-3 rounded-xl font-semibold transition-all"
-                        style={{
-                          color: active ? "#0D0F1A" : "var(--color-text-primary)",
-                          background: active ? "var(--color-accent-gold)" : "transparent",
-                        }}
-                      >
-                        {label}
-                      </Link>
-                    </motion.div>
-                  );
-                })}
-              </nav>
+              {NAV_LINKS.map(({ to, label }) => {
+                const active = location.pathname === to;
+                return (
+                  <Link
+                    key={to}
+                    to={to}
+                    className="block px-4 py-3.5 rounded-xl font-bold transition-all text-center"
+                    style={{
+                      color: active ? "#0D0F1A" : "var(--color-text-primary)",
+                      background: active ? "var(--color-accent-gold)" : "var(--color-bg-elevated)",
+                      border: active ? "none" : "1px solid var(--color-border)"
+                    }}
+                  >
+                    {label}
+                  </Link>
+                );
+              })}
 
               {/* Mobile Search */}
-              <div className="p-4" style={{ borderTop: "1px solid var(--color-border)" }}>
-                <form onSubmit={handleSubmit} className="flex rounded-xl overflow-hidden"
-                  style={{ background: "var(--color-bg-elevated)", border: "1px solid var(--color-border)" }}>
-                  <input
-                    className="flex-1 px-4 py-3 bg-transparent text-sm outline-none"
-                    style={{ color: "var(--color-text-primary)" }}
-                    placeholder="Search..."
-                    onChange={handleChange}
-                    value={query}
-                  />
-                  <button type="submit" className="px-4" style={{ color: "var(--color-accent-gold)" }}>
-                    <FiSearch size={18} />
-                  </button>
-                </form>
-              </div>
-            </motion.aside>
-          </>
+              <form onSubmit={handleSubmit} className="flex items-center rounded-xl overflow-hidden mt-2"
+                style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}>
+                <input
+                  className="flex-1 px-4 py-3.5 bg-transparent text-sm outline-none"
+                  style={{ color: "var(--color-text-primary)" }}
+                  placeholder="Search movies, series..."
+                  onChange={handleChange}
+                  value={query}
+                />
+                <button type="submit" className="px-5 flex items-center justify-center h-full" style={{ color: "var(--color-accent-gold)" }}>
+                  <FiSearch size={20} />
+                </button>
+              </form>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </motion.header>

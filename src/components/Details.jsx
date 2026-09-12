@@ -113,7 +113,7 @@ function Details() {
 
         {/* Hero Content */}
         <div className="relative z-10 container mx-auto px-4 lg:px-8 py-10">
-          <div className="flex flex-col md:flex-row gap-8 items-end">
+          <div className="flex flex-col md:flex-row gap-8 items-center md:items-end text-center md:text-left">
             {/* Poster */}
             <motion.div
               initial={{ opacity: 0, x: -40 }}
@@ -134,7 +134,7 @@ function Details() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.15, ease: "easeOut" }}
-              className="flex-1 pb-2"
+              className="flex-1 pb-2 flex flex-col items-center md:items-start"
             >
               <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-3">
                 {detail.title || detail.name}
@@ -145,7 +145,7 @@ function Details() {
                   </span>
                 )}
               </h1>
-              <div className="flex flex-wrap gap-3 mb-4">
+              <div className="flex flex-wrap justify-center md:justify-start gap-3 mb-4">
                 {detail.vote_average > 0 && (
                   <span className="flex items-center gap-1.5 text-sm font-bold px-3 py-1 rounded-full"
                     style={{ background: "var(--color-accent-gold)", color: "#0D0F1A" }}>
@@ -174,7 +174,7 @@ function Details() {
               )}
 
               {/* ── CTA Buttons ── */}
-              <div className="flex flex-wrap gap-3 pt-1">
+              <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-1">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.97 }}
