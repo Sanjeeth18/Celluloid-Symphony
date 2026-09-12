@@ -1,82 +1,62 @@
 // Centralized TMDB API service - single source of truth for all API calls
-const BASE_URL = process.env.REACT_APP_TMDB_BASE_URL || "https://api.themoviedb.org/3";
-const API_KEY = process.env.REACT_APP_TMDB_API_KEY || "db8d53ea7f93c34789d584745abbbd08";
-const AUTH_TOKEN =
-  process.env.REACT_APP_TMDB_AUTH_TOKEN ||
-  "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYjhkNTNlYTdmOTNjMzQ3ODlkNTg0NzQ1YWJiYmQwOCIsIm5iZiI6MTczNzgxNjY0Mi44ODQsInN1YiI6IjY3OTRmYTQyMDljMjUyZTNhYjIzNzY4MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ySw6r3Llu06lHY-0T75EVLrn71bT41ofcZsDLUg_oPo";
+const BASE_URL = "/api";
 
 export const IMAGE_BASE_URL = process.env.REACT_APP_TMDB_IMAGE_BASE_URL || "https://image.tmdb.org/t/p/original";
 export const IMAGE_W500_URL = "https://image.tmdb.org/t/p/w500";
 
-// ─── Auth Headers ──────────────────────────────────────────────────────────────
-const authHeaders = {
-  Authorization: `Bearer ${AUTH_TOKEN}`,
-  "Content-Type": "application/json",
-};
-
-// ─── Generic fetch with auth token ────────────────────────────────────────────
-const fetchWithAuth = async (url) => {
-  const response = await fetch(url, { headers: authHeaders });
-  if (!response.ok) throw new Error(`TMDB API error: ${response.status}`);
+// ─── Generic fetch helper for Vercel API Proxy ───────────────────────────────
+const fetchFromProxy = async (url) => {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`API Proxy error: ${response.status}`);
   const data = await response.json();
   return data.results ?? data;
 };
 
-// ─── Generic fetch with API key ───────────────────────────────────────────────
-const fetchWithKey = async (url) => {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`TMDB API error: ${response.status}`);
-  const data = await response.json();
-  return data.results ?? [];
-};
-
 // ─── Movie Lists ───────────────────────────────────────────────────────────────
 export const fetchMovieList = () =>
-  fetchWithKey(`${BASE_URL}/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc`);
+  fetchFromProxy(`${BASE_URL}/movies?action=discover`);
 
 export const fetchSeriesList = () =>
-  fetchWithKey(`${BASE_URL}/discover/tv?api_key=${API_KEY}&sort_by=popularity.desc`);
+  fetchFromProxy(`${BASE_URL}/tv?action=discover`);
 
 export const fetchTrendingMovies = () =>
-  fetchWithKey(`${BASE_URL}/trending/movie/week?api_key=${API_KEY}&language=en-US`);
+  fetchFromProxy(`${BASE_URL}/movies?action=trending`);
 
 export const fetchFilteredContent = (year, isMovie) => {
-  const type = isMovie ? "movie" : "tv";
-  const yearParam = year ? `&primary_release_year=${year}` : "";
-  return fetchWithKey(
-    `${BASE_URL}/discover/${type}?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc${yearParam}`
-  );
+  const type = isMovie ? "movies" : "tv";
+  const yearParam = year ? `&year=${year}` : "";
+  return fetchFromProxy(`${BASE_URL}/${type}?action=filtered${yearParam}`);
 };
 
 // ─── Movie Details ─────────────────────────────────────────────────────────────
 export const fetchReviews = (id, type) =>
-  fetchWithAuth(`${BASE_URL}/${type}/${id}/reviews?language=en-US&page=1`);
+  fetchFromProxy(`${BASE_URL}/details?action=reviews&type=${type}&id=${id}`);
 
 export const fetchVideos = (id, type) =>
-  fetchWithAuth(`${BASE_URL}/${type}/${id}/videos?language=en-US`);
+  fetchFromProxy(`${BASE_URL}/details?action=videos&type=${type}&id=${id}`);
 
 export const fetchMovieCredits = (id) =>
-  fetchWithAuth(`${BASE_URL}/movie/${id}/credits?language=en-US`);
+  fetchFromProxy(`${BASE_URL}/details?action=credits&type=movie&id=${id}`);
 
 export const fetchTVCredits = (id) =>
-  fetchWithAuth(`${BASE_URL}/tv/${id}/credits?language=en-US`);
+  fetchFromProxy(`${BASE_URL}/details?action=credits&type=tv&id=${id}`);
 
 export const fetchImages = (id, type) =>
-  fetchWithAuth(`${BASE_URL}/${type}/${id}/images`);
+  fetchFromProxy(`${BASE_URL}/details?action=images&type=${type}&id=${id}`);
+
+export const fetchAllDetails = (id, type) =>
+  fetchFromProxy(`${BASE_URL}/details?action=all&type=${type}&id=${id}`);
 
 export const fetchPersonDetails = (memberId) =>
-  fetch(`${BASE_URL}/person/${memberId}?api_key=${API_KEY}&language=en-US`)
-    .then((r) => r.json());
+  fetch(`${BASE_URL}/person?action=details&id=${memberId}`).then((r) => r.json());
 
 export const fetchPersonMovieCredits = (personId) =>
-  fetch(`${BASE_URL}/person/${personId}/movie_credits?api_key=${API_KEY}&language=en-US`)
-    .then((r) => r.json());
+  fetch(`${BASE_URL}/person?action=movie_credits&id=${personId}`).then((r) => r.json());
 
 export const fetchPersonTVCredits = (personId) =>
-  fetch(`${BASE_URL}/person/${personId}/tv_credits?api_key=${API_KEY}&language=en-US`)
-    .then((r) => r.json());
+  fetch(`${BASE_URL}/person?action=tv_credits&id=${personId}`).then((r) => r.json());
 
 export const searchMulti = (query) =>
-  fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}`)
+  fetch(`${BASE_URL}/search?query=${encodeURIComponent(query)}`)
     .then((r) => r.json())
     .then((d) => d.results || []);

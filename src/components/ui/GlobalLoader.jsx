@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useApp } from "../../context/AppContext";
 
 export default function GlobalLoader({ children }) {
   const location = useLocation();
+  const { isNavigating } = useApp();
   const [loading, setLoading] = useState(false);
   const isFirstLoad = useRef(true);
 
@@ -23,10 +25,12 @@ export default function GlobalLoader({ children }) {
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
+  const showLoader = loading || isNavigating;
+
   return (
     <>
       <AnimatePresence>
-        {loading && (
+        {showLoader && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

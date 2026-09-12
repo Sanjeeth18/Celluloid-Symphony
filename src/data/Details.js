@@ -12,12 +12,12 @@ export {
 
 // Legacy fetchCredits helper (used only in old ActorDetails — now replaced)
 export const fetchCredits = async (memberDetails, apiKey, setMovieCredits, setTvCredits, setIsLoading) => {
-  const BASE_URL = "https://api.themoviedb.org/3";
+  const BASE_URL = "/api";
   try {
     setIsLoading(true);
     const [movieRes, tvRes] = await Promise.all([
-      fetch(`${BASE_URL}/person/${memberDetails.id}/movie_credits?api_key=${apiKey}&language=en-US`),
-      fetch(`${BASE_URL}/person/${memberDetails.id}/tv_credits?api_key=${apiKey}&language=en-US`),
+      fetch(`${BASE_URL}/person?action=movie_credits&id=${memberDetails.id}`),
+      fetch(`${BASE_URL}/person?action=tv_credits&id=${memberDetails.id}`),
     ]);
     const [movieData, tvData] = await Promise.all([movieRes.json(), tvRes.json()]);
     setMovieCredits(movieData.cast || []);
