@@ -8,7 +8,7 @@ export function AppProvider({ children }) {
   const navigate = useNavigate();
   const [isNavigating, setIsNavigating] = useState(false);
 
-  // ── Shared navigation to movie/series details ─────────────────────────────
+  // Shared navigation to movie/series details
   const navigateToDetails = useCallback(async (item) => {
     setIsNavigating(true);
     try {
@@ -35,7 +35,7 @@ export function AppProvider({ children }) {
     }
   }, [navigate]);
 
-  // ── Navigate to actor details ─────────────────────────────────────────────
+  // Navigate to actor details
   const navigateToActor = useCallback(async (memberId) => {
     setIsNavigating(true);
     try {

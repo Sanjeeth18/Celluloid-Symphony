@@ -95,7 +95,7 @@ function Details() {
 
   return (
     <div className="min-h-screen" style={{ background: "var(--color-bg-primary)", paddingTop: "80px" }}>
-      {/* ── Hero Section ── */}
+      {/* Hero Section */}
       <div className="relative w-full min-h-[60vh] flex items-end overflow-hidden">
         {/* Backdrop image */}
         {backdropUrl && (
@@ -173,7 +173,7 @@ function Details() {
                 </p>
               )}
 
-              {/* ── CTA Buttons ── */}
+              {/* CTA Buttons */}
               <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-1">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -195,10 +195,10 @@ function Details() {
         </div>
       </div>
 
-      {/* ── Detail Body ── */}
+      {/* Detail Body */}
       <div className="container mx-auto px-4 lg:px-8 py-10 space-y-12">
 
-        {/* ── Embedded Player Section ── */}
+        {/* Embedded Player Section */}
         <AnimatePresence>
           {showPlayer && (
             <motion.section
@@ -470,7 +470,7 @@ function Details() {
         )}
       </div>
 
-      {/* ── Review Modal ── */}
+      {/* Review Modal */}
       <AnimatePresence>
         {isModalOpen && selectedReview && (
           <motion.div

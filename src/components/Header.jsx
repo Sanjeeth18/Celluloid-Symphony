@@ -89,7 +89,7 @@ function Header() {
     >
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center w-full justify-between lg:justify-start">
-          {/* ── Logo ── */}
+          {/* Logo */}
           <Link to="/" className="flex items-center gap-2 flex-shrink-0">
             <motion.div
               whileHover={{ rotate: 15, scale: 1.1 }}
@@ -111,7 +111,7 @@ function Header() {
             </span>
           </Link>
 
-          {/* ── Desktop Nav ── */}
+          {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-1 ml-8">
             {NAV_LINKS.map(({ to, label }) => {
               const active = location.pathname === to;
@@ -139,7 +139,7 @@ function Header() {
             })}
           </nav>
 
-          {/* ── Mobile Menu Button ── */}
+          {/* Mobile Menu Button */}
           <motion.button
             whileTap={{ scale: 0.9 }}
             className="lg:hidden p-2 rounded-xl transition-colors"
@@ -150,7 +150,7 @@ function Header() {
             {isMenuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
           </motion.button>
 
-          {/* ── Search ── */}
+          {/* Search */}
           <div className="hidden lg:block ml-auto relative" ref={searchRef}>
             <form onSubmit={handleSubmit} className="flex items-center">
               <div
@@ -226,7 +226,7 @@ function Header() {
         </div>
       </div>
 
-      {/* ── Mobile Dropdown Menu ── */}
+      {/* Mobile Dropdown Menu */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div

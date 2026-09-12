@@ -62,7 +62,7 @@ export default function HeroBanner() {
       className="relative w-full overflow-hidden"
       style={{ height: "clamp(520px, 90vh, 860px)", background: "var(--color-bg-primary)" }}
     >
-      {/* ── Backdrop Layer ── */}
+      {/* Backdrop Layer */}
       <AnimatePresence custom={direction} initial={false}>
         <motion.div
           key={`bg-${movie.id}`}
@@ -88,7 +88,7 @@ export default function HeroBanner() {
         </motion.div>
       </AnimatePresence>
 
-      {/* ── Content Layer ── */}
+      {/* Content Layer */}
       <div className="absolute inset-0 flex items-center">
         <div className="container mx-auto px-6 lg:px-16 pb-16 max-w-3xl">
           <AnimatePresence mode="wait">
@@ -182,7 +182,7 @@ export default function HeroBanner() {
         </div>
       </div>
 
-      {/* ── Slide Thumbnails (right side desktop) ── */}
+      {/* Slide Thumbnails (right side desktop) */}
       <div className="absolute right-8 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-3">
         {movieList.slice(0, total).map((m, i) => (
           <motion.button
@@ -207,7 +207,7 @@ export default function HeroBanner() {
         ))}
       </div>
 
-      {/* ── Nav Arrows ── */}
+      {/* Nav Arrows */}
       <div className="absolute bottom-10 left-6 lg:left-16 flex items-center gap-3">
         <motion.button
           whileHover={{ scale: 1.1 }}

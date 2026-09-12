@@ -19,7 +19,7 @@ const sectionVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] } },
 };
 
-// ── Individual Card ─────────────────────────────────────────────────────────────
+// Individual Card
 function MovieCard({ item, isMovie, index, navigateToDetails }) {
   const [hovered, setHovered] = useState(false);
   const title = isMovie ? item.title : item.name;
@@ -119,7 +119,7 @@ function MovieCard({ item, isMovie, index, navigateToDetails }) {
   );
 }
 
-// ── Main Swiper Section ──────────────────────────────────────────────────────────
+// Main Swiper Section
 function MovieSwiper({ title, isMovie = true, upcoming = false }) {
   const [selectedYear, setSelectedYear] = useState("");
   const { navigateToDetails } = useApp();
@@ -138,7 +138,7 @@ function MovieSwiper({ title, isMovie = true, upcoming = false }) {
       className="relative pb-16"
       style={{ background: "var(--color-bg-primary)" }}
     >
-      {/* ── Section Header ── */}
+      {/* Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between px-6 md:px-10 lg:px-14 pt-14 pb-8 gap-4">
         <div>
           <motion.p
@@ -222,7 +222,7 @@ function MovieSwiper({ title, isMovie = true, upcoming = false }) {
         </div>
       </div>
 
-      {/* ── Swiper Carousel ── */}
+      {/* Swiper Carousel */}
       <div className="px-6 md:px-10 lg:px-14">
         <Swiper
           modules={[Navigation, Autoplay, FreeMode]}

@@ -2,10 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─── Google Fonts ─────────────────────────────────────────────────────────── */
+/* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* ─── CSS Design Tokens (Color Palette) ────────────────────────────────────── */
+/* CSS Design Tokens (Color Palette) */
 :root {
   /* Backgrounds (Midnight Purple/Deep Blue) */
   --color-bg-primary:   #0A0915;
@@ -34,7 +34,7 @@
   --shadow-indigo-glow: 0 0 30px rgba(255, 0, 229, 0.35);
 }
 
-/* ─── Global Base Styles ───────────────────────────────────────────────────── */
+/* Global Base Styles */
 * {
   box-sizing: border-box;
 }
@@ -52,7 +52,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ─── Custom Scrollbar ──────────────────────────────────────────────────────── */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -68,7 +68,7 @@ body {
   background: var(--color-accent-gold2);
 }
 
-/* ─── Skeleton Shimmer Animation ────────────────────────────────────────────── */
+/* Skeleton Shimmer Animation */
 .skeleton-shimmer {
   background: linear-gradient(
     90deg,
@@ -85,7 +85,7 @@ body {
   100% { background-position: -200% 0; }
 }
 
-/* ─── Glassmorphism Utility ─────────────────────────────────────────────────── */
+/* Glassmorphism Utility */
 .glass {
   background: var(--color-bg-glass);
   backdrop-filter: blur(16px);
@@ -100,12 +100,12 @@ body {
   border: 1px solid var(--color-border-bright);
 }
 
-/* ─── Gold Glow Shadow ──────────────────────────────────────────────────────── */
+/* Gold Glow Shadow */
 .shadow-gold-glow {
   box-shadow: var(--shadow-gold-glow);
 }
 
-/* ─── Gradient Text Utilities ───────────────────────────────────────────────── */
+/* Gradient Text Utilities */
 .gradient-text-gold {
   background: linear-gradient(135deg, var(--color-accent-gold), var(--color-accent-gold2), var(--color-accent-gold));
   -webkit-background-clip: text;
@@ -127,7 +127,7 @@ body {
   background-clip: text;
 }
 
-/* ─── Swiper Custom Overrides ───────────────────────────────────────────────── */
+/* Swiper Custom Overrides */
 .swiper-button-next,
 .swiper-button-prev {
   color: var(--color-accent-gold) !important;
@@ -165,7 +165,7 @@ body {
   box-shadow: 0 0 8px var(--color-accent-gold);
 }
 
-/* ─── Page Transition ───────────────────────────────────────────────────────── */
+/* Page Transition */
 .page-enter {
   opacity: 0;
   transform: translateY(16px);

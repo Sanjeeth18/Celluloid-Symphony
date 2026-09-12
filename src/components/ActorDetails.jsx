@@ -54,7 +54,7 @@ function ActorsDetails() {
     <div className="min-h-screen" style={{ background: "var(--color-bg-primary)", paddingTop: "80px" }}>
       <div className="container mx-auto px-4 lg:px-8 py-10">
 
-        {/* ── Profile Card ── */}
+        {/* Profile Card */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -105,7 +105,7 @@ function ActorsDetails() {
           </div>
         </motion.div>
 
-        {/* ── Credits ── */}
+        {/* Credits */}
         {isLoading ? (
           <SkeletonCard variant="grid" count={8} />
         ) : (

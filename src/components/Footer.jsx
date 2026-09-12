@@ -23,7 +23,7 @@ function Footer({ enableAnimation = true }) {
       <div className="container mx-auto px-4 lg:px-8 py-14">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
 
-          {/* ── Brand ── */}
+          {/* Brand */}
           <motion.div
             variants={contactVariants}
             initial="hidden"
@@ -40,7 +40,7 @@ function Footer({ enableAnimation = true }) {
             </motion.div>
           </motion.div>
 
-          {/* ── Address ── */}
+          {/* Address */}
           <motion.div
             variants={contactVariants}
             initial="hidden"
@@ -62,7 +62,7 @@ function Footer({ enableAnimation = true }) {
             </motion.div>
           </motion.div>
 
-          {/* ── Contact ── */}
+          {/* Contact */}
           <motion.div
             variants={contactVariants}
             initial="hidden"

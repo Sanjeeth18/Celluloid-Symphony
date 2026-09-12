@@ -4,7 +4,7 @@ const BASE_URL = "/api";
 export const IMAGE_BASE_URL = process.env.REACT_APP_TMDB_IMAGE_BASE_URL || "https://image.tmdb.org/t/p/original";
 export const IMAGE_W500_URL = "https://image.tmdb.org/t/p/w500";
 
-// ─── Generic fetch helper for Vercel API Proxy ───────────────────────────────
+// Generic fetch helper for Vercel API Proxy
 const fetchFromProxy = async (url) => {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`API Proxy error: ${response.status}`);
@@ -12,7 +12,7 @@ const fetchFromProxy = async (url) => {
   return data.results ?? data;
 };
 
-// ─── Movie Lists ───────────────────────────────────────────────────────────────
+// Movie Lists
 export const fetchMovieList = () =>
   fetchFromProxy(`${BASE_URL}/movies?action=discover`);
 
@@ -28,7 +28,7 @@ export const fetchFilteredContent = (year, isMovie) => {
   return fetchFromProxy(`${BASE_URL}/${type}?action=filtered${yearParam}`);
 };
 
-// ─── Movie Details ─────────────────────────────────────────────────────────────
+// Movie Details
 export const fetchReviews = (id, type) =>
   fetchFromProxy(`${BASE_URL}/details?action=reviews&type=${type}&id=${id}`);
 
