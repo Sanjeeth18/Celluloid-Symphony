@@ -5,13 +5,13 @@ import { FiCalendar, FiBook, FiMail } from "react-icons/fi";
 
 const DETAILS = [
   { icon: FiCalendar, label: "Date of Birth", value: "16.07.2004" },
-  { icon: FiBook,     label: "College",        value: "PSG College Of Technology" },
-  { icon: FiMail,     label: "Mail ID",           value: "sanjeeth653@gmail.com", href: "mailto:sanjeeth653@gmail.com" },
+  { icon: FiBook, label: "College", value: "PSG College Of Technology" },
+  { icon: FiMail, label: "Mail ID", value: "sanjeeth653@gmail.com", href: "mailto:sanjeeth653@gmail.com" },
 ];
 
 function ContactDetails() {
   return (
-    <div className="min-h-screen py-20 px-4" style={{ background: "var(--color-bg-primary)" }}>
+    <div className=" py-20 px-4 mb-0" style={{ background: "var(--color-bg-primary)" }}>
       {/* Title */}
       <motion.div
         initial={{ opacity: 0, y: -24 }}
@@ -19,7 +19,7 @@ function ContactDetails() {
         transition={{ duration: 0.6 }}
         className="text-center mb-12"
       >
-        <p className="text-xs font-semibold tracking-widest uppercase mb-2"
+        <p className="text-xs font-semibold tracking-widest uppercase my-2"
           style={{ color: "var(--color-accent-gold)" }}>
           Get in Touch
         </p>

@@ -59,8 +59,8 @@ export default function HeroBanner() {
 
   return (
     <div
-      className="relative w-full overflow-hidden"
-      style={{ height: "clamp(520px, 90vh, 860px)", background: "var(--color-bg-primary)" }}
+      className="relative w-full overflow-hidden h-[55vh] min-h-[480px] lg:h-[85vh] lg:min-h-[600px] lg:max-h-[860px]"
+      style={{ background: "var(--color-bg-primary)" }}
     >
       {/* Backdrop Layer */}
       <AnimatePresence custom={direction} initial={false}>
@@ -90,7 +90,7 @@ export default function HeroBanner() {
 
       {/* Content Layer */}
       <div className="absolute inset-0 flex items-center">
-        <div className="container mx-auto px-6 lg:px-16 pb-16 max-w-3xl">
+        <div className="container mx-auto px-6 lg:px-16 pb-16 max-w-3xl text-center md:text-left flex flex-col items-center md:items-start">
           <AnimatePresence mode="wait">
             <motion.div key={`content-${movie.id}`} className="space-y-4">
 
@@ -114,7 +114,7 @@ export default function HeroBanner() {
               {/* Metadata row */}
               <motion.div
                 custom={2} variants={contentVariants} initial="hidden" animate="visible"
-                className="flex flex-wrap items-center gap-3"
+                className="flex flex-wrap items-center justify-center md:justify-start gap-3"
               >
                 {movie.vote_average > 0 && (
                   <span className="flex items-center gap-1.5 text-sm font-black px-3 py-1 rounded-full"
@@ -147,7 +147,7 @@ export default function HeroBanner() {
               {/* CTA Buttons */}
               <motion.div
                 custom={4} variants={contentVariants} initial="hidden" animate="visible"
-                className="flex flex-wrap gap-3 pt-2"
+                className="flex flex-wrap justify-center md:justify-start gap-3 pt-2"
               >
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -208,7 +208,7 @@ export default function HeroBanner() {
       </div>
 
       {/* Nav Arrows */}
-      <div className="absolute bottom-10 left-6 lg:left-16 flex items-center gap-3">
+      <div className="absolute bottom-10 w-full flex items-center justify-center lg:w-auto lg:justify-start lg:left-16 gap-3">
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}

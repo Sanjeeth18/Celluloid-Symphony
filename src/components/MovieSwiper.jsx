@@ -236,12 +236,12 @@ function MovieSwiper({ title, isMovie = true, upcoming = false }) {
           }}
           spaceBetween={14}
           breakpoints={{
-            320:  { slidesPerView: 1.7 },
-            480:  { slidesPerView: 2.3 },
-            640:  { slidesPerView: 3.2 },
-            1024: { slidesPerView: 4.2 },
-            1280: { slidesPerView: 5.2 },
-            1536: { slidesPerView: 6.2 },
+            320:  { slidesPerView: 2.2 },
+            480:  { slidesPerView: 3.2 },
+            640:  { slidesPerView: 4.2 },
+            1024: { slidesPerView: 5.2 },
+            1280: { slidesPerView: 6.2 },
+            1536: { slidesPerView: 7.2 },
           }}
           className="!pb-4"
           style={{ overflow: "visible" }}

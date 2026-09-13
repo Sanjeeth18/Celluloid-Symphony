@@ -30,7 +30,7 @@ function MovieCard({ item, isMovie = true, index = 0 }) {
       onClick={() => navigateToDetails(item)}
     >
       {/* Poster */}
-      <div className="h-[45vh] overflow-hidden relative">
+      <div className="aspect-[2/3] overflow-hidden relative">
         <img
           src={posterSrc}
           alt={title || "Movie Poster"}
