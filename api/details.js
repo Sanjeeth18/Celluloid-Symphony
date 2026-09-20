@@ -1,10 +1,10 @@
 export default async function handler(req, res) {
   const { id, type, action } = req.query;
   const BASE_URL = 'https://api.themoviedb.org/3';
-  const AUTH_TOKEN = process.env.TMDB_AUTH_TOKEN;
+  const API_KEY = process.env.TMDB_API_KEY;
 
-  if (!AUTH_TOKEN) {
-    return res.status(500).json({ error: 'Server configuration error: TMDB_AUTH_TOKEN is missing.' });
+  if (!API_KEY) {
+    return res.status(500).json({ error: 'Server configuration error: TMDB_API_KEY is missing.' });
   }
 
   if (!id || !type || !action) {
@@ -27,15 +27,11 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid action parameter' });
   }
 
-  const url = `${BASE_URL}${endpoint}`;
+  const hasQueryParams = endpoint.includes('?');
+  const url = `${BASE_URL}${endpoint}${hasQueryParams ? '&' : '?'}api_key=${API_KEY}`;
   
-  const headers = {
-    Authorization: `Bearer ${AUTH_TOKEN}`,
-    "Content-Type": "application/json",
-  };
-
   try {
-    const response = await fetch(url, { headers });
+    const response = await fetch(url);
     if (!response.ok) {
       return res.status(response.status).json({ error: `TMDb API responded with ${response.status}` });
     }
