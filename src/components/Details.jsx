@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/No_Image_Available.jpg";
@@ -11,6 +11,7 @@ import "swiper/css/autoplay";
 import { Navigation, EffectCoverflow, Autoplay } from "swiper/modules";
 import { IMAGE_BASE_URL } from "../services/tmdb";
 import { useApp } from "../context/AppContext";
+import { useWatchHistory } from "../context/WatchHistoryContext";
 import { FiStar, FiCalendar, FiGlobe, FiUsers, FiTrendingUp, FiX, FiPlay, FiTv, FiFilm, FiLoader } from "react-icons/fi";
 
 const sectionVariants = {
@@ -35,6 +36,7 @@ function Details() {
   const location  = useLocation();
   const { state } = location;
   const { navigateToActor } = useApp();
+  const { addToHistory } = useWatchHistory();
 
   const detail    = state?.item      || {};
   const reviews   = state?.reviews   || [];
@@ -43,6 +45,13 @@ function Details() {
   const crew      = state?.crew      || [];
   const backdrops = state?.backdrops || [];
   const posters   = state?.posters   || [];
+
+  // Automatically record in watch history upon viewing details
+  useEffect(() => {
+    if (detail && detail.id) {
+      addToHistory(detail);
+    }
+  }, [detail, addToHistory]);
 
   const [selectedReview, setSelectedReview] = useState(null);
   const [isModalOpen,    setIsModalOpen]     = useState(false);
