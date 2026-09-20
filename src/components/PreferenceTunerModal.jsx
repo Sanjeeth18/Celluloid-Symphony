@@ -70,9 +70,9 @@ function PreferenceTunerModal({ isOpen, onClose, initialWeights = {}, initialMin
               </div>
               <div>
                 <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                  ML Preference Engine Tuner
+                  Recommendation Tuner
                   <span className="text-xs px-2 py-0.5 rounded-full font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                    AI Scored
+                    Smart Scored
                   </span>
                 </h3>
                 <p className="text-xs text-gray-400">

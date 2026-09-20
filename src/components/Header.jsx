@@ -148,7 +148,7 @@ function Header() {
             {NAV_LINKS.map(({ to, label }) => {
               const active = location.pathname === to;
               return (
-                <Link key={to} to={to}>
+                <Link key={to} to={to} state={{ fromApp: true }}>
                   <motion.div
                     whileHover={{ scale: 1.05 }}
                     className="relative px-4 py-2 rounded-xl text-sm font-semibold transition-colors duration-200"
@@ -291,7 +291,7 @@ function Header() {
                         onClick={() => setIsUserMenuOpen(false)}
                         className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-gray-200 hover:bg-white/10 hover:text-cyan-300 transition-colors"
                       >
-                        <FiClock size={15} /> Watch History & AI Hub
+                        <FiClock size={15} /> Watch History
                       </Link>
 
                       <button
@@ -350,6 +350,7 @@ function Header() {
                   <Link
                     key={to}
                     to={to}
+                    state={{ fromApp: true }}
                     className="block px-4 py-3 rounded-xl font-bold transition-all text-center text-sm"
                     style={{
                       color: active ? "#0D0F1A" : "var(--color-text-primary)",

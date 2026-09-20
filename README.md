@@ -27,18 +27,22 @@
 - **Hybrid Storage & Auto-Sync**: Stores watch history locally in `localStorage` for guests and seamlessly syncs to Firebase Cloud Firestore (`users/{uid}/watchHistory`) upon Google login.
 - **Watch History Dashboard (`/history`)**: Dedicated timeline view with search within history, genre/media filters, date-grouped items, individual item deletion, and a bulk "Clear History" confirmation modal.
 
-### 3. 🤖 Machine Learning Movie Recommendation System
+### 3. 🤖 Smart "For You" Recommendation System
 - **Content-Based & Collaborative Hybrid Engine**: Extracts multi-hot genre vectors, normalizes TMDB rating and popularity scores, and applies exponential recency decay ($e^{-\lambda t}$) to watched items to construct a dynamic User Profile Vector.
 - **Cosine Similarity Matrix**: Computes mathematical cosine similarity:
   $$\text{CosineSim}(\mathbf{v}_U, \mathbf{v}_M) = \frac{\mathbf{v}_U \cdot \mathbf{v}_M}{\|\mathbf{v}_U\| \|\mathbf{v}_M\|}$$
-  Ranking candidates with user-friendly match percentages (e.g. `98% Match`).
-- **Interactive Preference Tuner**: Modal allowing users to adjust genre multipliers, select preset mood vectors (*Adrenaline, Mind-Bending, Feel Good, Deep & Dark*), set minimum rating thresholds, and retrain ML recommendations in real time.
+  Ranking candidates with user-friendly "Smart Scored" match percentages (e.g. `98% Match`).
+- **Recommendation Tuner**: Modal allowing users to adjust genre multipliers, select preset mood vectors (*Adrenaline, Mind-Bending, Feel Good, Deep & Dark*), set minimum rating thresholds, and retrain personalized recommendations in real time.
 
 ### 4. 🛡️ Application Security & Hardening
 - **Input Sanitization & XSS Defense**: Sanitizes all search inputs, text fields, and URL parameters using control-character stripping and HTML entity replacement.
 - **Rate-Limiting & Debouncing**: Throttles user inputs and API requests to prevent network bursts or denial-of-service vulnerabilities.
 - **Zero-Trust Firestore Security Rules**: Enforces strict per-user database access control (`request.auth.uid == userId`) so users can only read and write their own documents.
 - **Serverless API Proxy Layer**: Encapsulates TMDb API keys and Bearer Tokens behind serverless API proxy handlers in `/api`, ensuring secrets are never leaked to client browsers.
+- **Internal Route Protection**: Prevents unauthorized manual URL navigation to internal-only routes (e.g. `/about`, `/contact`), intercepting missing route state and safely redirecting to the Authentication gate.
+
+### 5. 📅 Release-Date Aware UI
+- **Intelligent Media Players**: Verifies `release_date` and `first_air_date` against the current date, dynamically hiding "Watch Movie" or "Watch Series" options for upcoming titles to prevent broken media embeds.
 
 ---
 
@@ -139,9 +143,9 @@ Celluloid-Symphony/
 │   │   ├── Details.jsx        # Detailed Movie/Show View with Auto-History
 │   │   ├── MovieSwiper.jsx    # Responsive Carousel Swiper Rails
 │   │   ├── Mainswiper.jsx     # Hero Swiper Carousel
-│   │   ├── RecommendationsSection.jsx # ML Recommended Movies Section
+│   │   ├── RecommendationsSection.jsx # For You Recommended Movies Section
 │   │   ├── PreferenceTunerModal.jsx  # Interactive ML Vector Weight Tuner
-│   │   ├── WatchHistoryContent.jsx   # Watch History Timeline & ML Hub
+│   │   ├── WatchHistoryContent.jsx   # Watch History Timeline & For You Hub
 │   │   └── ui/                # UI Primitives & Loaders
 │   ├── context/               # Application State Contexts
 │   │   ├── AppContext.jsx     # Shared Navigation & Detail Loaders
@@ -153,8 +157,6 @@ Celluloid-Symphony/
 │   │   ├── MovieDetails.jsx   # Movie/TV Details Page
 │   │   ├── WatchHistory.jsx   # Watch History Dashboard (/history)
 │   │   ├── Search.jsx         # Search Results Page
-│   │   ├── About.jsx          # About Page
-│   │   ├── Contact.jsx        # Contact Page
 │   │   └── Actors.jsx         # Actor Details Page
 │   ├── services/              # API & Algorithm Services
 │   │   ├── firebase.js        # Firebase App, Auth & Firestore Initialization
@@ -251,7 +253,7 @@ sequenceDiagram
     Auth->>Storage: Trigger Guest History Cloud Migration
 ```
 
-### 2. Machine Learning Recommendation Workflow
+### 2. Smart Recommendation Workflow
 ```mermaid
 flowchart TD
     A[User Views Movie / Updates History] --> B[Extract Multi-Hot Genre Vectors]

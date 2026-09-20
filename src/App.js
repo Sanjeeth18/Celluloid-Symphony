@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import "./App.css";
@@ -28,6 +28,14 @@ const queryClient = new QueryClient({
   },
 });
 
+function InternalOnlyRoute({ children }) {
+  const location = useLocation();
+  if (!location.state?.fromApp) {
+    return <Navigate to="/" replace />;
+  }
+  return children;
+}
+
 function App() {
   useEffect(() => {
     document.title = "Celluloid Symphony — Explore Movies & Series";
@@ -46,8 +54,8 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/details" element={<MovieDetails />} />
                     <Route path="/history" element={<WatchHistory />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<InternalOnlyRoute><Contact /></InternalOnlyRoute>} />
+                    <Route path="/about" element={<InternalOnlyRoute><About /></InternalOnlyRoute>} />
                     <Route path="/search" element={<Search />} />
                     <Route path="/actors" element={<Actors />} />
                   </Routes>

@@ -60,6 +60,8 @@ function Details() {
   const [episode,        setEpisode]         = useState(1);
 
   const isTVSeries = detail.media_type === "tv" || !!detail.first_air_date;
+  const releaseDateString = detail.release_date || detail.first_air_date;
+  const isReleased = releaseDateString ? new Date(releaseDateString) <= new Date() : false;
   const playerUrl  = isTVSeries
     ? `https://vidsrc.sbs/embed/tv/${detail.id}/${season}/${episode}`
     : `https://vidsrc.sbs/embed/movie/${detail.id}`;
@@ -184,20 +186,22 @@ function Details() {
 
               {/* CTA Buttons */}
               <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-1">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => setShowPlayer(true)}
-                  className="flex items-center gap-2.5 px-6 py-3 rounded-2xl text-sm font-black"
-                  style={{
-                    background: "var(--color-accent-gold)",
-                    color: "#0D0F1A",
-                    boxShadow: "0 0 28px rgba(0,240,255,0.4)",
-                  }}
-                >
-                  <FiPlay size={16} fill="currentColor" />
-                  {isTVSeries ? "Watch Series" : "Watch Movie"}
-                </motion.button>
+                {isReleased && (
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => setShowPlayer(true)}
+                    className="flex items-center gap-2.5 px-6 py-3 rounded-2xl text-sm font-black"
+                    style={{
+                      background: "var(--color-accent-gold)",
+                      color: "#0D0F1A",
+                      boxShadow: "0 0 28px rgba(0,240,255,0.4)",
+                    }}
+                  >
+                    <FiPlay size={16} fill="currentColor" />
+                    {isTVSeries ? "Watch Series" : "Watch Movie"}
+                  </motion.button>
+                )}
               </div>
             </motion.div>
           </div>

@@ -45,7 +45,8 @@ function WatchHistoryContent() {
   }, [watchHistory, searchQuery, filterType]);
 
   return (
-    <div className="min-h-screen pt-24 pb-16 px-4 lg:px-8 max-w-7xl mx-auto">
+    <div className="min-h-screen pt-24 pb-16">
+      <div className="max-w-7xl mx-auto px-4 lg:px-8">
       {/* Top Banner */}
       <div className="relative rounded-3xl p-6 lg:p-8 mb-8 overflow-hidden border border-white/10"
         style={{
@@ -60,7 +61,7 @@ function WatchHistoryContent() {
                 <FiClock size={22} />
               </span>
               <h1 className="text-2xl lg:text-3xl font-black text-white tracking-wide">
-                Watch History & AI Hub
+                Watch History
               </h1>
             </div>
             <p className="text-sm text-gray-400">
@@ -119,7 +120,7 @@ function WatchHistoryContent() {
             }`}
           >
             <FiCpu size={16} />
-            AI Recommendations
+            For You
           </button>
         </div>
       </div>
@@ -257,8 +258,9 @@ function WatchHistoryContent() {
           )}
         </div>
       )}
+      </div>
 
-      {/* TAB 2: AI RECOMMENDATIONS */}
+      {/* TAB 2: RECOMMENDATIONS */}
       {activeTab === "recommendations" && <RecommendationsSection />}
 
       {/* Clear Confirmation Modal */}
