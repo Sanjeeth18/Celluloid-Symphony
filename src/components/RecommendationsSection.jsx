@@ -15,11 +15,9 @@ import {
   FiStar,
   FiCalendar,
   FiPlay,
-  FiSliders,
   FiChevronLeft,
   FiChevronRight,
 } from "react-icons/fi";
-import PreferenceTunerModal from "./PreferenceTunerModal";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -151,23 +149,16 @@ function RecommendationsSection() {
   const { navigateToDetails } = useApp();
   const [recommendations, setRecommendations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isTunerOpen, setIsTunerOpen] = useState(false);
-  const [tunerConfig, setTunerConfig] = useState({ weights: {}, minRating: 0 });
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-
-  const isPersonalized = watchHistory.length > 0;
 
   useEffect(() => {
     let isMounted = true;
     async function loadRecs() {
+      if (watchHistory.length === 0) return;
       setIsLoading(true);
       try {
-        const recs = await getMLRecommendations(watchHistory, {
-          customWeights: tunerConfig.weights,
-          minRating: tunerConfig.minRating,
-          limit: 14,
-        });
+        const recs = await getMLRecommendations(watchHistory, { limit: 14 });
         if (isMounted) setRecommendations(recs);
       } catch (err) {
         console.error("Failed to load recommendations:", err);
@@ -177,7 +168,11 @@ function RecommendationsSection() {
     }
     loadRecs();
     return () => { isMounted = false; };
-  }, [watchHistory, tunerConfig]);
+  }, [watchHistory]);
+
+  if (watchHistory.length === 0) {
+    return null;
+  }
 
   if (isLoading) return <SkeletonCard variant="hero" />;
 
@@ -201,7 +196,7 @@ function RecommendationsSection() {
             className="text-xs font-bold tracking-[0.3em] uppercase mb-2"
             style={{ color: "var(--color-accent-gold)" }}
           >
-            {isPersonalized ? "🤖 Personalized" : "🤖 Discover"}
+            🤖 For You
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 16 }}
@@ -210,7 +205,7 @@ function RecommendationsSection() {
             transition={{ duration: 0.55, delay: 0.08 }}
             className="text-3xl sm:text-4xl lg:text-5xl font-black text-white"
           >
-            {isPersonalized ? "Recommended For You" : "Popular Picks"}
+            Smart Scored
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
@@ -219,29 +214,11 @@ function RecommendationsSection() {
             transition={{ duration: 0.5, delay: 0.15 }}
             className="text-xs text-gray-400 mt-1"
           >
-            {isPersonalized
-              ? "Based on your watch history"
-              : "Start watching to personalize your feed"}
+            Based on your watch history
           </motion.p>
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Tune Preferences */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setIsTunerOpen(true)}
-            className="px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all"
-            style={{
-              background: "var(--color-bg-elevated)",
-              color: "var(--color-accent-gold)",
-              border: "1px solid rgba(0,240,255,0.25)",
-            }}
-          >
-            <FiSliders size={15} />
-            Tune
-          </motion.button>
-
           {/* Carousel nav buttons */}
           <div className="flex gap-2">
             {[
@@ -317,15 +294,6 @@ function RecommendationsSection() {
           </Swiper>
         )}
       </div>
-
-      {/* Tuner Modal */}
-      <PreferenceTunerModal
-        isOpen={isTunerOpen}
-        onClose={() => setIsTunerOpen(false)}
-        initialWeights={tunerConfig.weights}
-        initialMinRating={tunerConfig.minRating}
-        onApply={(newConfig) => setTunerConfig(newConfig)}
-      />
     </motion.section>
   );
 }

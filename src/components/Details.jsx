@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import logo from "../assets/No_Image_Available.jpg";
 import { genres, languages } from "../data/language_genre";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -12,7 +12,9 @@ import { Navigation, EffectCoverflow, Autoplay } from "swiper/modules";
 import { IMAGE_BASE_URL } from "../services/tmdb";
 import { useApp } from "../context/AppContext";
 import { useWatchHistory } from "../context/WatchHistoryContext";
-import { FiStar, FiCalendar, FiGlobe, FiUsers, FiTrendingUp, FiX, FiPlay, FiTv, FiFilm, FiLoader } from "react-icons/fi";
+import ReviewModal from "./ui/ReviewModal";
+import EmbeddedPlayer from "./ui/EmbeddedPlayer";
+import { FiStar, FiCalendar, FiGlobe, FiUsers, FiTrendingUp, FiPlay, FiLoader } from "react-icons/fi";
 
 const sectionVariants = {
   hidden:  { opacity: 0, y: 30 },
@@ -212,102 +214,17 @@ function Details() {
       <div className="container mx-auto px-4 lg:px-8 py-10 space-y-12">
 
         {/* Embedded Player Section */}
-        <AnimatePresence>
-          {showPlayer && (
-            <motion.section
-              initial={{ opacity: 0, y: 32, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 32, scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 260, damping: 24 }}
-              className="rounded-3xl overflow-hidden"
-              style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}
-            >
-              {/* Player Header */}
-              <div className="flex items-center justify-between p-4 md:p-5"
-                style={{ borderBottom: "1px solid var(--color-border)" }}>
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-xl" style={{ background: "rgba(0,240,255,0.15)" }}>
-                    {isTVSeries ? <FiTv size={18} style={{ color: "var(--color-accent-gold)" }} />
-                                : <FiFilm size={18} style={{ color: "var(--color-accent-gold)" }} />}
-                  </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-widest font-bold" style={{ color: "var(--color-accent-gold)" }}>
-                      Now Playing
-                    </p>
-                    <p className="text-sm font-bold text-white">
-                      {detail.title || detail.name}
-                      {isTVSeries && ` — S${String(season).padStart(2,"0")} E${String(episode).padStart(2,"0")}`}
-                    </p>
-                  </div>
-                </div>
-                <motion.button
-                  whileHover={{ rotate: 90, scale: 1.1 }}
-                  transition={{ duration: 0.2 }}
-                  onClick={() => setShowPlayer(false)}
-                  className="p-2 rounded-xl"
-                  style={{ background: "var(--color-bg-elevated)", color: "var(--color-text-muted)" }}
-                >
-                  <FiX size={18} />
-                </motion.button>
-              </div>
-
-              {/* Season / Episode Controls for TV */}
-              {isTVSeries && (
-                <div className="flex flex-wrap gap-4 px-5 py-3" style={{ borderBottom: "1px solid var(--color-border)" }}>
-                  <div className="flex items-center gap-2">
-                    <label className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--color-text-dim)" }}>Season</label>
-                    <select
-                      value={season}
-                      onChange={(e) => setSeason(Number(e.target.value))}
-                      className="px-3 py-1.5 rounded-lg text-sm font-semibold outline-none"
-                      style={{ background: "var(--color-bg-elevated)", color: "var(--color-text-primary)", border: "1px solid var(--color-border)" }}
-                    >
-                      {Array.from({ length: 20 }, (_, i) => i + 1).map((s) => (
-                        <option key={s} value={s}>Season {s}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <label className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--color-text-dim)" }}>Episode</label>
-                    <select
-                      value={episode}
-                      onChange={(e) => setEpisode(Number(e.target.value))}
-                      className="px-3 py-1.5 rounded-lg text-sm font-semibold outline-none"
-                      style={{ background: "var(--color-bg-elevated)", color: "var(--color-text-primary)", border: "1px solid var(--color-border)" }}
-                    >
-                      {Array.from({ length: 50 }, (_, i) => i + 1).map((ep) => (
-                        <option key={ep} value={ep}>Episode {ep}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              )}
-
-              {/* iframe Player with Skeleton Loader */}
-              <div className="relative w-full bg-[#0D0F1A]" style={{ paddingTop: "56.25%" }}>
-                {/* Background Skeleton Loader */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <motion.div 
-                    animate={{ rotate: 360 }} 
-                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                  >
-                    <FiLoader size={32} style={{ color: "var(--color-accent-gold)", opacity: 0.5 }} />
-                  </motion.div>
-                </div>
-                {/* Foreground Iframe */}
-                <iframe
-                  key={playerUrl}
-                  src={playerUrl}
-                  title={`Watch ${detail.title || detail.name}`}
-                  className="absolute inset-0 w-full h-full z-10"
-                  allowFullScreen
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  style={{ border: "none" }}
-                />
-              </div>
-            </motion.section>
-          )}
-        </AnimatePresence>
+        <EmbeddedPlayer
+          showPlayer={showPlayer}
+          onClose={() => setShowPlayer(false)}
+          isTVSeries={isTVSeries}
+          detail={detail}
+          season={season}
+          setSeason={setSeason}
+          episode={episode}
+          setEpisode={setEpisode}
+          playerUrl={playerUrl}
+        />
 
         {/* Quick Stats Grid */}
         <motion.div
@@ -484,46 +401,11 @@ function Details() {
       </div>
 
       {/* Review Modal */}
-      <AnimatePresence>
-        {isModalOpen && selectedReview && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 flex items-center justify-center z-50 p-4"
-            style={{ background: "rgba(0,0,0,0.8)" }}
-            onClick={() => setIsModalOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 30 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 30 }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2 max-h-[80vh] overflow-y-auto rounded-2xl p-6 shadow-2xl"
-              style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold gradient-text-gold">
-                  @{selectedReview.author}
-                </h3>
-                <motion.button
-                  whileHover={{ rotate: 90, scale: 1.1 }}
-                  transition={{ duration: 0.2 }}
-                  onClick={() => setIsModalOpen(false)}
-                  className="p-2 rounded-full transition-colors"
-                  style={{ background: "var(--color-bg-elevated)", color: "var(--color-text-muted)" }}
-                >
-                  <FiX size={18} />
-                </motion.button>
-              </div>
-              <p className="text-sm leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
-                {selectedReview.content}
-              </p>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <ReviewModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        review={selectedReview} 
+      />
     </div>
   );
 }
