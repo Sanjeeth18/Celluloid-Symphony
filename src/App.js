@@ -14,6 +14,7 @@ import { AppProvider } from "./context/AppContext";
 import { AuthProvider } from "./context/AuthContext";
 import { WatchHistoryProvider } from "./context/WatchHistoryContext";
 import GlobalLoader from "./components/ui/GlobalLoader";
+import AuthGate from "./components/AuthGate";
 
 // React Query client with smart defaults for a movie app
 const queryClient = new QueryClient({
@@ -39,17 +40,19 @@ function App() {
           <WatchHistoryProvider>
             {/* AppProvider requires router context for useNavigate */}
             <AppProvider>
-              <GlobalLoader>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/details" element={<MovieDetails />} />
-                  <Route path="/history" element={<WatchHistory />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/search" element={<Search />} />
-                  <Route path="/actors" element={<Actors />} />
-                </Routes>
-              </GlobalLoader>
+              <AuthGate>
+                <GlobalLoader>
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/details" element={<MovieDetails />} />
+                    <Route path="/history" element={<WatchHistory />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/search" element={<Search />} />
+                    <Route path="/actors" element={<Actors />} />
+                  </Routes>
+                </GlobalLoader>
+              </AuthGate>
               {/* Global premium toast notifications */}
               <Toaster
                 position="bottom-right"

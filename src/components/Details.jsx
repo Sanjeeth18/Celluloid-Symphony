@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/No_Image_Available.jpg";
@@ -38,7 +38,7 @@ function Details() {
   const { navigateToActor } = useApp();
   const { addToHistory } = useWatchHistory();
 
-  const detail    = state?.item      || {};
+  const detail    = useMemo(() => state?.item || {}, [state?.item]);
   const reviews   = state?.reviews   || [];
   const videos    = state?.videos    || [];
   const cast      = state?.cast      || [];

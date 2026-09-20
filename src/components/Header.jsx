@@ -315,7 +315,7 @@ function Header() {
                 className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-white text-black hover:bg-gray-100 transition-all shadow-md"
               >
                 <FcGoogle size={18} />
-                <span>Google Sign-In</span>
+                <span>Sign-In</span>
               </motion.button>
             )}
 

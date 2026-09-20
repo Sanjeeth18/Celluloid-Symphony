@@ -25,6 +25,7 @@ export function sanitizeInput(input) {
 export function sanitizeSearchQuery(query) {
   if (typeof query !== "string") return "";
   // Strip control characters and sanitize
+  // eslint-disable-next-line no-control-regex
   const cleaned = query.trim().replace(/[\u0000-\u001F\u007F]/g, "");
   return cleaned.slice(0, 100); // Enforce max 100 chars
 }

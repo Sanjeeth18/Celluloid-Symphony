@@ -98,6 +98,7 @@ export function WatchHistoryProvider({ children }) {
     if (user && !user.isDemoUser) {
       syncLocalToFirestore();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   // Add or Update item in Watch History
