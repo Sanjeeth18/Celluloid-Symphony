@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiX, FiTv, FiFilm, FiLoader } from "react-icons/fi";
+import { FiX, FiTv, FiFilm, FiExternalLink, FiPlay } from "react-icons/fi";
 
 function EmbeddedPlayer({ 
   showPlayer, 
@@ -13,7 +13,9 @@ function EmbeddedPlayer({
   setEpisode, 
   playerUrl 
 }) {
-  const [isIframeLoaded, setIsIframeLoaded] = useState(false);
+  const handleWatch = () => {
+    window.open(playerUrl, "_blank", "noopener,noreferrer");
+  };
 
   return (
     <AnimatePresence>
@@ -65,7 +67,6 @@ function EmbeddedPlayer({
                   onChange={(e) => {
                     setSeason(Number(e.target.value));
                     setEpisode(1);
-                    setIsIframeLoaded(false);
                   }}
                   className="bg-transparent text-sm font-bold outline-none cursor-pointer"
                   style={{ color: "var(--color-text-primary)" }}
@@ -83,7 +84,6 @@ function EmbeddedPlayer({
                   value={episode}
                   onChange={(e) => {
                     setEpisode(Number(e.target.value) || 1);
-                    setIsIframeLoaded(false);
                   }}
                   className="bg-transparent text-sm font-bold outline-none w-16"
                   style={{ color: "var(--color-text-primary)" }}
@@ -92,25 +92,50 @@ function EmbeddedPlayer({
             </div>
           )}
 
-          {/* iframe Player with Skeleton Loader */}
-          <div className="relative w-full aspect-video bg-black">
-            {!isIframeLoaded && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 z-10 gap-3">
-                <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
-                  <FiLoader size={32} style={{ color: "var(--color-accent-gold)" }} />
-                </motion.div>
-                <p className="text-xs font-bold tracking-widest text-white animate-pulse">CONNECTING STREAM...</p>
-              </div>
-            )}
-            <iframe
-              key={playerUrl}
-              src={playerUrl}
-              className="w-full h-full border-0 absolute inset-0"
-              title="Media Player"
-              allowFullScreen
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              onLoad={() => setIsIframeLoaded(true)}
-            ></iframe>
+          {/* Launch Player Area */}
+          <div
+            className="relative w-full aspect-video flex flex-col items-center justify-center gap-6"
+            style={{
+              background: "radial-gradient(ellipse at center, rgba(0,240,255,0.06) 0%, #000 70%)"
+            }}
+          >
+            {/* Decorative pulsing ring */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div
+                className="w-52 h-52 rounded-full border animate-ping"
+                style={{ borderColor: "var(--color-accent-gold)", opacity: 0.08, animationDuration: "2.5s" }}
+              />
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div
+                className="w-36 h-36 rounded-full border"
+                style={{ borderColor: "var(--color-accent-gold)", opacity: 0.18 }}
+              />
+            </div>
+
+            {/* Launch button */}
+            <div className="relative z-10 flex flex-col items-center gap-4 px-6 text-center">
+              <motion.button
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleWatch}
+                className="flex items-center gap-3 px-8 py-4 rounded-2xl text-base font-black shadow-2xl"
+                style={{
+                  background: "var(--color-accent-gold)",
+                  color: "#0D0F1A",
+                  boxShadow: "0 0 40px rgba(0,240,255,0.35)",
+                }}
+              >
+                <FiPlay size={20} fill="currentColor" />
+                {isTVSeries
+                  ? `Play S${String(season).padStart(2,"0")} E${String(episode).padStart(2,"0")}`
+                  : "Play Movie"}
+                <FiExternalLink size={16} />
+              </motion.button>
+              <p className="text-xs max-w-xs" style={{ color: "var(--color-text-dim)" }}>
+                Opens in a new tab · Powered by VidSrc
+              </p>
+            </div>
           </div>
         </motion.section>
       )}
