@@ -64,9 +64,6 @@ function Details() {
   const isTVSeries = detail.media_type === "tv" || !!detail.first_air_date;
   const releaseDateString = detail.release_date || detail.first_air_date;
   const isReleased = releaseDateString ? new Date(releaseDateString) <= new Date() : false;
-  const playerUrl  = isTVSeries
-    ? `https://vidsrc.sbs/embed/tv/${detail.id}/${season}/${episode}`
-    : `https://vidsrc.sbs/embed/movie/${detail.id}`;
 
   if (!detail?.id) {
     return (
