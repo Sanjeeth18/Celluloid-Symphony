@@ -223,7 +223,6 @@ function Details() {
           setSeason={setSeason}
           episode={episode}
           setEpisode={setEpisode}
-          playerUrl={playerUrl}
         />
 
         {/* Quick Stats Grid */}
